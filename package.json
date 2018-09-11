@@ -1,0 +1,29 @@
+{
+  "name": "chattervox",
+  "version": "0.0.1",
+  "description": "AX.25 HAM radio chatroom with support for binary compression and digital signatures.",
+  "main": "chattervox",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "mocha --full-trace test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brannondorsey/chattervox.git"
+  },
+  "author": "Brannon Dorsey <brannon@brannondorsey.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brannondorsey/chattervox/issues"
+  },
+  "homepage": "https://github.com/brannondorsey/chattervox#readme",
+  "dependencies": {
+    "ax25": "git+https://github.com/echicken/node-ax25.git#124b496631fa448d95ac97553cdd1c8120d4f9cb",
+    "chalk": "^2.4.1",
+    "elliptic": "^6.4.1",
+    "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
