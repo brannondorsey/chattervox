@@ -21,19 +21,19 @@ class Messenger extends EventEmitter{
         this.tnc.open(() => this.emit('tnc-open'))
     }
 
-    function send(to, message, options) {
+    send(to, message, options) {
 
     }
 
-    function _signAndCompress(buffer) {
+    _signAndCompress(buffer) {
 
     }
 
-    function _decompressAndVerify(buffer) {
+    _decompressAndVerify(buffer) {
 
     }
 
-    function _onAX25DataRecieved(data) {
+    _onAX25DataRecieved(data) {
         const packet = new AX25.Packet()
         packet.disassemble(data.data)
         console.log(`Packet received on port ${data.port}`)
@@ -45,7 +45,7 @@ class Messenger extends EventEmitter{
         // }
     }
 
-    function _sendAX25Data(from, to, payload) {
+    _sendAX25Data(from, to, payload) {
         return new Promise((resolve, reject) => {
             const packet = new AX25.Packet()
             packet.type = AX25.Masks.control.frame_types.u_frame.subtypes.ui;

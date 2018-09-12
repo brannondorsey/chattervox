@@ -1,4 +1,4 @@
-const compression = require('../src/compression.js')
+const compression = require('../build/compression.js')
 const assert = require('assert')
 
 describe('compression', async () => {
