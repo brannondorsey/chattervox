@@ -18,7 +18,7 @@ type keystore = { [callsign: string]: Key[] }
  * @class Keystore
  * A class for managing keys, signatures, and signature verification
  */
-class Keystore {
+export class Keystore {
     
     path: string
     _keystore: keystore
@@ -172,8 +172,6 @@ class Keystore {
         return fs.existsSync(this.path)
     }
 }
-
-module.exports = Keystore
 
 // const keyFromPrivate = ec.keyFromPrivate(priv)
 // console.log(keyFromPrivate)

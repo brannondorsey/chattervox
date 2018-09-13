@@ -83,16 +83,26 @@ export class Packet {
 
     async disassemble(data: Buffer): Promise<void> {
 
-        if (!Buffer.isBuffer(data)) throw TypeError('data must be a Buffer')
+        if (!Buffer.isBuffer(data)) throw TypeError('Invalid data must be a Buffer')
+
+        if (data.length < 4) {
+            const error = TypeError('Invalid packet, too few bytes.')
+            error.name = 'InvalidPacket'
+            throw error
+        }
 
         const magic = data.slice(0, 2)
         if (magic[0] !== MagicBytes[0] || magic[1] !== MagicBytes[1]) {
-            throw Error(`Invalid magic bytes in packet header. This is not a CV Packet.`)
+            const err = TypeError(`Invalid magic bytes in packet header. This is not a CV Packet.`)
+            err.name = 'InvalidPacket'
+            throw err
         }
 
         const version = data[2]
         if (version !== 1) {
-            throw Error(`Invalid packet version: ${version}`)
+            const err = TypeError(`Invalid packet version: ${version}`)
+            err.name = 'InvalidPacket'
+            throw err
         }
 
         // COME BACK HERE
@@ -118,11 +128,7 @@ export class Packet {
         if (this.header.signed) {
             this.signature = payload.slice(0, this.header.signatureLength)
             messageIndex = this.header.signatureLength
-            // console.log(`data length: ${data.length}`)
-            // console.log(`signature length: ${this.header.signatureLength}`)
-            // console.log(`payload length: ${payload.length}`)
         }
-
 
         this.message = payload.slice(messageIndex).toString('utf8')
     }
@@ -150,11 +156,14 @@ export class Packet {
     }
 
     static async FromAX25Packet(ax25Buffer: Buffer): Promise<Packet> {
-        const ax25Packet = new AX25.Packet()
-        ax25Packet.disassemble(ax25Buffer)
-
-        if (ax25Packet.payload.length == 0) {
-            throw Error('ax25 packet payload is empty')
+        
+        const ax25Packet = new AX25.Packet()        
+        try {
+            ax25Packet.disassemble(ax25Buffer)
+        } catch (err) {
+            const error = TypeError(err.message)
+            error.name = 'InvalidPacket'
+            throw error
         }
 
         const packet = new Packet()

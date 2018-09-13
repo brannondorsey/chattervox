@@ -1,4 +1,4 @@
-const Keystore = require('../build/Keystore.js')
+const { Keystore } = require('../build/Keystore.js')
 const assert = require('assert')
 const fs = require('fs')
 

@@ -1,5 +1,5 @@
 const CVPacket = require('../build/CVPacket.js')
-const Keystore = require('../build/Keystore.js')
+const { Keystore } = require('../build/Keystore.js')
 const assert = require('assert')
 const fs = require('fs')
 
@@ -38,6 +38,16 @@ describe('CVPacket', () => {
     })
 
     describe('#FromAX25Packet()', () => {
+        
+        it('should error with a useful name on an invalid packet', async() => {
+            try {
+                const packet = await Packet.FromAX25Packet(Buffer.from([0x10, 0x11, 0x12, 0x13]))
+                assert.fail('Invalid packet must throw an error')
+            } catch (err) {
+                if (err.name === 'InvalidPacket') assert.ok(true)
+                else throw err
+            }
+        })
 
         describe('short packet no signature', () => {
             let packet
