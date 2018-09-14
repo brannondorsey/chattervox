@@ -5,7 +5,7 @@ const ec = new EC('p192')
 
 type Curve = 'p192'
 
-interface Key {
+export interface Key {
     curve: Curve,
     public: string
     private?: string
@@ -171,24 +171,3 @@ export class Keystore {
         return fs.existsSync(this.path)
     }
 }
-
-// const keyFromPrivate = ec.keyFromPrivate(priv)
-// console.log(keyFromPrivate)
-
-// const keyFromPublic = ec.keyFromPublic(pub, 'hex')
-// console.log(keyFromPublic)
-
-// const pub = key.getPublic('hex')
-// const priv = key.getPrivate('hex')
-
-// const message = 'This is a signed message. try something else!'
-// const buff = new Buffer.from(message, 'utf8')
-// const signature = key.sign(buff).toDER()
-// const signatureBuff = new Buffer(signature)
-// const verify = key.verify(buff, signatureBuff)
-
-// console.log(`Curve: ${curve}`)
-// console.log(`Public key length: ${pub.length}`)
-// console.log(`Private key length: ${priv.length}`)
-// console.log(`Signature length: ${signatureBuff.length}`)
-// console.log(`verified: ${verify}`)
