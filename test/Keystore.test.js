@@ -74,4 +74,8 @@ describe('Keystore', function() {
         assert.ok(revoked === false)
         assert.ok(ks.getPublicKeys('TEST').length === 0)
     })
+
+    it(`should remove the keystore file at the end of the test`, () => {
+        fs.unlink(path)
+    })
 })
