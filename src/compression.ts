@@ -1,6 +1,6 @@
 import * as zlib from 'zlib'
 
-const compressionOptions = {
+const compressionOptions: zlib.ZlibOptions = {
     level: zlib.constants.Z_BEST_COMPRESSION,
 }
 
