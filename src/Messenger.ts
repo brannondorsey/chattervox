@@ -1,5 +1,4 @@
 import KISS_TNC from 'kiss-tnc'
-import * as AX25 from 'ax25'
 import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
 import { Packet } from './CVPacket.js'
@@ -13,9 +12,9 @@ export enum Verification {
 
 export class Messenger extends EventEmitter {
 
-    ks: Keystore
-    tnc: any
-    config: any
+    private ks: Keystore
+    private tnc: any
+    private config: any
 
     constructor(config: any) {
         super()
@@ -27,26 +26,26 @@ export class Messenger extends EventEmitter {
         }
 
         // device, baud_rate
-        this.tnc = new KISS_TNC(config.kissPort, config.kissBaud)
-        // process.on('SIGTERM', tnc.close)
-        this.tnc.on('error', (error: any) => this.emit('tnc-error', error))
-        this.tnc.on('data', (data: any) => this._onAX25DataRecieved(data))
+        this.tnc = this._createTNC(config.kissPort, config.kissBaud)
     }
 
     openTNC(): Promise<undefined> {
         return new Promise((resolve, reject) => {
-            // set a 5 second timeout
-            const timeout = setTimeout(reject, 5 * 1000)
-            this.tnc.open(() => {
-                clearTimeout(timeout)
-                this.emit('open')
-                resolve()
+            if (this.tnc == null) {
+                this.tnc = this._createTNC(this.config.kissPort, this.config.kissBaud)
+            }
+
+            this.tnc.open((err: any) => {
+                this.emit('open', err)
+                if (err) reject(err)
+                else resolve()
             })
         })
     }
 
     closeTNC(): void {
         this.tnc.close()
+        this.tnc = null
         this.emit('close')
     }
 
@@ -60,10 +59,11 @@ export class Messenger extends EventEmitter {
         }
 
         const packet: Buffer = await Packet.ToAX25Packet(from, to, message, signature)
+        if (this.tnc == null) throw Error('Error sending message with send(). The Messenger\'s TNC object is null. Are you sure it is connected?')
         return new Promise((resolve) => this.tnc.send_data(packet, resolve))
     }
 
-    async _onAX25DataRecieved(data: any) {
+    private async _onAX25DataRecieved(data: any) {
 
         let packet
         try  {
@@ -88,5 +88,13 @@ export class Messenger extends EventEmitter {
         }
 
         this.emit('message', packet.to, packet.from, packet.message, verification)
+    }
+
+    private _createTNC(port: string, baudrate: number): any {
+        const tnc = new KISS_TNC(port, baudrate)
+        // process.on('SIGTERM', tnc.close)
+        tnc.on('error', (error: any) => this.emit('tnc-error', error))
+        tnc.on('data', (data: any) => this._onAX25DataRecieved(data))
+        return tnc
     }
 }

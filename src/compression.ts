@@ -1,5 +1,4 @@
 import * as zlib from 'zlib'
-import * as util from 'util'
 
 const compressionOptions = {
     level: zlib.constants.Z_BEST_COMPRESSION,

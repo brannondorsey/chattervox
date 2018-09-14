@@ -1,6 +1,5 @@
 import * as fs from 'fs'
 import * as crypto from 'crypto'
-import * as util from 'util'
 import { ec as EC } from 'elliptic'
 const ec = new EC('p192')
 
@@ -20,8 +19,8 @@ type keystore = { [callsign: string]: Key[] }
  */
 export class Keystore {
     
-    path: string
-    _keystore: keystore
+    readonly path: string
+    private _keystore: keystore
 
     /**@constructor
      * @param  {string} path The path to a JSON keystore file. If path does not exist it is created.
@@ -144,7 +143,7 @@ export class Keystore {
                .digest()
     }
 
-    _addKey(callsign: string, publicHex: string, privateHex?: string): void {
+    private _addKey(callsign: string, publicHex: string, privateHex?: string): void {
 
         if (typeof callsign !== 'string') throw TypeError('callsign must be a string type')
         if (typeof publicHex !== 'string') throw TypeError('publicHex must be a string type')
@@ -160,15 +159,15 @@ export class Keystore {
         this._save()
     }
 
-    _save(): void {
+    private _save(): void {
         fs.writeFileSync(this.path, JSON.stringify(this._keystore, null, '\t'))
     }
 
-    _load(): keystore {
+    private _load(): keystore {
         return JSON.parse(fs.readFileSync(this.path).toString('utf8'))
     }
 
-    _exists(): boolean {
+    private _exists(): boolean {
         return fs.existsSync(this.path)
     }
 }
