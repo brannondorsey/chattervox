@@ -8,12 +8,20 @@ async function main() {
         kissBaud: 9600
     })
 
-    messenger.on('open', () => {
-        console.log('Messenger\'s tnc is open')
+    messenger.on('open', (err) => {
+        if (err) {
+            console.log('Error opening tnc connection')
+        } else {
+            console.log('Messenger\'s tnc is open')
+        }
     })
 
     messenger.on('close', () => {
         console.log('Messenger\'s tnc is now closed')
+        setTimeout(async () => {
+            await messenger.openTNC()
+            await messenger.send('CQ', 'This is a second message that was sent after the tnc was first closed.')
+        }, 10 * 1000)
     })
 
     messenger.on('tnc-error', (err) => {
@@ -29,9 +37,19 @@ async function main() {
         console.log(`verified: ${verification == Verification.Valid}`)
     })
 
-    await messenger.openTNC()
-    await messenger.send('CQ', 'This message is a zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz test baby!')
-    messenger.closeTNC()
+    messenger.openTNC()
+    .then(
+        () => sendMessage(messenger), 
+        () => { console.log('Error opening TNC connection message') }
+    )
+    
+}
+
+async function sendMessage(messenger) {
+        
+    await messenger.send('CQ', 'This message is a zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz test baby!', true)
+    // messenger.closeTNC()
+    // await messenger.send('CQ', 'This message is a zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz test baby!')
 
     setTimeout(()=>{}, 100000)
 }
