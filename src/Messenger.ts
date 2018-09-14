@@ -1,7 +1,7 @@
 import KISS_TNC from 'kiss-tnc'
 import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
-import { Packet } from './CVPacket.js'
+import { Packet } from './Packet.js'
 
 export enum Verification {
     NotSigned,

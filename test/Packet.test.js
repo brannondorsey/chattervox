@@ -1,10 +1,9 @@
-const CVPacket = require('../build/CVPacket.js')
+const { Packet } = require('../build/Packet.js')
 const { Keystore } = require('../build/Keystore.js')
 const assert = require('assert')
 const fs = require('fs')
 
-const Packet = CVPacket.Packet
-describe('CVPacket', () => {
+describe('Packet', () => {
 
     const ks = new Keystore('tmp-keystore.json')
     const { public, private } = ks.genKeyPair('N0CALL')
