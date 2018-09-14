@@ -51,22 +51,26 @@ export class Packet {
 
     async assemble(): Promise<Buffer> {
         
-        // compress signature + message
-        let payload = Buffer.from([])
-        if (this.signature) payload = this.signature
-        payload = Buffer.concat([payload, Buffer.from(this.message, 'utf8')])
-        const compressed = await compress(payload)
+        if (Buffer.isBuffer(this.signature)) {
+            this.header.signed = true
+            this.header.signatureLength = this.signature.length
+        } 
 
-        if (compressed.length < payload.length) {
+        // compress signature + message
+        let payload: Buffer = this.header.signed ? this.signature : Buffer.from([])
+        let message: Buffer = Buffer.from(this.message, 'utf8')
+        const compressed = await compress(message)
+        if (compressed.length < message.length) {
             this.header.compressed = true
-            payload = compressed
+            payload = Buffer.concat([payload, compressed])
         } else {
             this.header.compressed = false
+            payload = Buffer.concat([payload, message])
         }
 
         // flags
         let flags = 0x00
-        if (Buffer.isBuffer(this.signature)) flags = flags | HeaderFlags.Signed
+        if (this.header.signed) flags = flags | HeaderFlags.Signed
         if (this.header.compressed) flags = flags | HeaderFlags.Compressed
         
         // header buffer
@@ -105,7 +109,6 @@ export class Packet {
             throw err
         }
 
-        // COME BACK HERE
         const flags = data[3]
         this.header.compressed = (flags & HeaderFlags.Compressed) == HeaderFlags.Compressed
         this.header.signed = (flags & HeaderFlags.Signed) == HeaderFlags.Signed
@@ -120,17 +123,18 @@ export class Packet {
         }
 
         let payload: Buffer = data.slice(payloadIndex)
-        if (this.header.compressed) {
-            payload = await decompress(payload)
-        }
-
         let messageIndex = 0
         if (this.header.signed) {
             this.signature = payload.slice(0, this.header.signatureLength)
             messageIndex = this.header.signatureLength
         }
 
-        this.message = payload.slice(messageIndex).toString('utf8')
+        if (this.header.compressed) {
+            this.message = (await decompress(payload.slice(messageIndex))).toString('utf8')
+        } else {
+            this.message = payload.slice(messageIndex).toString('utf8')
+        }
+
     }
 
     static async ToAX25Packet(fromCallsign: string, 
