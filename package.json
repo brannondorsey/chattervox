@@ -23,6 +23,7 @@
     "@types/node": "^10.9.4",
     "ax25": "git+https://github.com/echicken/node-ax25.git#124b496631fa448d95ac97553cdd1c8120d4f9cb",
     "chalk": "^2.4.1",
+    "command-exists": "^1.2.7",
     "elliptic": "^6.4.1",
     "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git",
     "typescript": "^3.0.3"
