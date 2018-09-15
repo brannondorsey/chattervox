@@ -2,6 +2,14 @@ import KISS_TNC from 'kiss-tnc'
 import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
 import { Packet } from './Packet.js'
+import { Config } from './config.js';
+
+export interface MessageEvent {
+    to: string 
+    from: string 
+    message: string
+    verification: Verification
+}
 
 export enum Verification {
     NotSigned,
@@ -14,11 +22,10 @@ export class Messenger extends EventEmitter {
 
     private ks: Keystore
     private tnc: any
-    private config: any
+    private config: Config
 
-    constructor(config: any) {
+    constructor(config: Config) {
         super()
-        config.callsign = 'N0CALL'
         this.config = config
         this.ks = new Keystore('keystore.json')
         if (this.ks.getKeyPairs(config.callsign).length === 0) {
@@ -83,11 +90,18 @@ export class Messenger extends EventEmitter {
             } else {
                 const verified = this.ks.verify(packet.from, packet.message, packet.signature)
                 if (verified) verification = Verification.Valid
-                else Verification.Invalid
+                else verification = Verification.Invalid
             }
         }
 
-        this.emit('message', packet.to, packet.from, packet.message, verification)
+        const event: MessageEvent = {
+            to: packet.to, 
+            from: packet.from, 
+            message: packet.message,
+            verification
+        }
+
+        this.emit('message', event)
     }
 
     private _createTNC(port: string, baudrate: number): any {
