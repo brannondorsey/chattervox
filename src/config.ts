@@ -6,7 +6,7 @@ import { Keystore } from './Keystore'
 export interface Config {
     readonly version: number,
     callsign: string,
-    nick: string,
+    nicks: { [callsign: string]: string },
     keystoreFile: string,
     kissPort: string,
     kissBaud: number
@@ -19,7 +19,7 @@ const defaultKeystorePath = path.join(defaultVoxchatterDir, 'keystore.json')
 const defaultConfig: Config = {
     version: 1,
     callsign: 'N0CALL',
-    nick: '',
+    nicks: {},
     keystoreFile: defaultKeystorePath,
     kissPort: '/tmp/kisstnc',
     kissBaud: 9600
