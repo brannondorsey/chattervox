@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import * as crypto from 'crypto'
+import { createHash } from 'crypto'
 import { ec as EC } from 'elliptic'
 const ec = new EC('p192')
 
@@ -18,7 +18,7 @@ type keystore = { [callsign: string]: Key[] }
  * A class for managing keys, signatures, and signature verification
  */
 export class Keystore {
-    
+
     readonly path: string
     private _keystore: keystore
 
@@ -26,7 +26,7 @@ export class Keystore {
      * @param  {string} path The path to a JSON keystore file. If path does not exist it is created.
      */
     constructor(path: string) {
-        
+
         this.path = path
         this._keystore = {}
 
@@ -36,7 +36,7 @@ export class Keystore {
             this._keystore = this._load()
         }
     }
-    
+
     /**
      * @method addPublicKey
      * @param  {string} callsign
@@ -56,7 +56,7 @@ export class Keystore {
         const pub = key.getPublic('hex')
         const priv = key.getPrivate('hex')
         this._addKey(callsign, pub, priv)
-        return { public: pub, private: priv, curve: 'p192'}
+        return { public: pub, private: priv, curve: 'p192' }
     }
     /**
      * @param  {string} callsign
@@ -64,22 +64,30 @@ export class Keystore {
      * @returns {boolean} True if a key was removed from the keystore.
      */
     revoke(callsign: string, pubkeyHex: string): boolean {
-        
+
         // callsign not in keystore, no key is revoked
         if (!this._keystore.hasOwnProperty(callsign)) return false
-        
+
         // number of keys before the filter
         const length = this._keystore[callsign].length
         this._keystore[callsign] = this._keystore[callsign].filter((key: Key) => {
             return key.public !== pubkeyHex
         })
-        
+
         if (this._keystore[callsign].length !== length) {
             this._save()
             return true
         }
 
         return false
+    }
+
+    /** Get a list of callsigns.
+     * @method getCallsigns
+     * @returns {string[]}
+     */
+    getCallsigns(): string[] {
+        return Object.keys(this._keystore)
     }
 
     /**
@@ -103,7 +111,7 @@ export class Keystore {
         })
     }
 
-    
+
     /**@method sign
      * @param  {string} message A string containing a message to sign.
      * @param  {string} privateHex A private key as a string of hex characters.
@@ -113,10 +121,10 @@ export class Keystore {
         const key = ec.keyFromPrivate(privateHex)
         const hash: Buffer = this.sha256(message)
         const signature = key.sign(hash).toDER()
-        return new Buffer(signature)
+        return Buffer.from(signature)
     }
 
-    
+
     /**@method verify
      * @param  {string} callsign
      * @param  {string} message
@@ -138,9 +146,9 @@ export class Keystore {
      * @return {Buffer} The SHA 256 message digest
      */
     sha256(message: string): Buffer {
-        return crypto.createHash('sha256')
-               .update(message, 'utf8')
-               .digest()
+        return createHash('sha256')
+            .update(message, 'utf8')
+            .digest()
     }
 
     private _addKey(callsign: string, publicHex: string, privateHex?: string): void {
