@@ -11,6 +11,7 @@ export interface Config {
     kissPort: string,
     kissBaud: number,
     launchDirewolf: boolean,
+    signingKey?: string,
     direwolfPath?: string
 }
 

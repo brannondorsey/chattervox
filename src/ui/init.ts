@@ -17,20 +17,27 @@ export async function interactiveInit() {
         if (correct === '' || correct === 'yes' || correct === 'y') break
     }
 
-    try {
-        init()
-        save(conf)
-        term(`\nSettings saved to ${defaultConfigPath}`)
-    } catch (err) {
-        term(`\nError saving settings to ${defaultConfigPath}`)
-        term.processExit()
-    }
+    // create the ~/.chattervox dir, config.json, and keystore.json
+    init()
 
     const ks: Keystore = new Keystore(conf.keystoreFile)
     term(`\nGenerating ECDSA keypair...`)
     const key: Key = ks.genKeyPair(conf.callsign)
-    await timeout(2500) // delay for dramatic effect, lol
+    await timeout(2000) // delay for dramatic effect, lol
     term(`\nPublic Key: ^c${key.public}^\n`)
+
+    // signatures are created using a private key, but we don't want to include
+    // the private key in the config file, so instead we use the public key
+    // as the identifier, and then actually sign with the private key.
+    conf.signingKey = key.public
+
+    try {
+        save(conf)
+        term(`\nSettings saved to ${defaultConfigPath}\n`)
+    } catch (err) {
+        term(`\nError saving settings to ${defaultConfigPath}\n`)
+        term.processExit()
+    }
 }
 
 async function askUser(): Promise<Config> {

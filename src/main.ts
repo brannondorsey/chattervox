@@ -4,6 +4,7 @@ import * as chat from './subcommands/chat'
 import * as addkey from './subcommands/addkey'
 import * as removekey from './subcommands/removekey'
 import * as showkey from './subcommands/showkey'
+import * as genkey from './subcommands/genkey'
 import { interactiveInit } from './ui/init'
 
 function parseArgs(): any {
@@ -50,6 +51,17 @@ function parseArgs(): any {
 
     removeKey.addArgument('publickey', { type: 'string' })
 
+    const genKey: ArgumentParser = subs.addParser('genkey', {
+        addHelp: true,
+        description: 'Generate a new keypair for your callsign.'
+    })
+
+    genKey.addArgument('--make-signing', { 
+        action: 'storeTrue',
+        dest: 'makeSigning',
+        help: 'Make the generated key your default signing key.' 
+    })
+
     return parser.parseArgs()
 }
 
@@ -74,6 +86,7 @@ async function main() {
         case 'showkey': code = await showkey.main(args); break
         case 'addkey': code = await addkey.main(args); break
         case 'removekey': code = await removekey.main(args); break
+        case 'genkey': code = await genkey.main(args); break
     }
 
     process.exit(code)
