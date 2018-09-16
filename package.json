@@ -21,14 +21,17 @@
   "homepage": "https://github.com/brannondorsey/chattervox#readme",
   "dependencies": {
     "@types/node": "^10.9.4",
+    "argparse": "^1.0.10",
     "ax25": "git+https://github.com/echicken/node-ax25.git#124b496631fa448d95ac97553cdd1c8120d4f9cb",
     "chalk": "^2.4.1",
     "command-exists": "^1.2.7",
     "elliptic": "^6.4.1",
     "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git",
+    "terminal-kit": "^1.26.2",
     "typescript": "^3.0.3"
   },
   "devDependencies": {
+    "@types/argparse": "^1.0.34",
     "mocha": "^5.2.0"
   }
 }

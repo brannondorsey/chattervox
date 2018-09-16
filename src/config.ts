@@ -9,20 +9,23 @@ export interface Config {
     nicks: { [callsign: string]: string },
     keystoreFile: string,
     kissPort: string,
-    kissBaud: number
+    kissBaud: number,
+    launchDirewolf: boolean,
+    direwolfPath?: string
 }
 
-const defaultVoxchatterDir = path.join(os.homedir(), '.voxchatter')
-const defaultConfigPath = path.join(defaultVoxchatterDir, 'config.json')
-const defaultKeystorePath = path.join(defaultVoxchatterDir, 'keystore.json')
+export const defaultChattervoxDir = path.join(os.homedir(), '.chattervox')
+export const defaultConfigPath = path.join(defaultChattervoxDir, 'config.json')
+export const defaultKeystorePath = path.join(defaultChattervoxDir, 'keystore.json')
 
-const defaultConfig: Config = {
+export const defaultConfig: Config = {
     version: 1,
     callsign: 'N0CALL',
     nicks: {},
     keystoreFile: defaultKeystorePath,
     kissPort: '/tmp/kisstnc',
-    kissBaud: 9600
+    kissBaud: 9600,
+    launchDirewolf: true
 }
 
 /** Save a config file as JSON
@@ -57,14 +60,14 @@ export function exists(configPath?: string): boolean {
 }
 
 /**
- * Create new voxchatter directory, config file, and keystore ONLY if they do
+ * Create new chattervox directory, config file, and keystore ONLY if they do
  * not already exist.
  * @function init
  */
 export function init(): void {
 
-    if (!fs.existsSync(defaultVoxchatterDir)) {
-        fs.mkdirSync(defaultVoxchatterDir)
+    if (!fs.existsSync(defaultChattervoxDir)) {
+        fs.mkdirSync(defaultChattervoxDir)
     }
 
     if (!exists(defaultConfigPath)) {
