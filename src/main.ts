@@ -1,5 +1,6 @@
 import { ArgumentParser, SubParser } from 'argparse'
 import * as config from './config'
+import { Keystore } from './Keystore'
 import * as chat from './subcommands/chat'
 import * as addkey from './subcommands/addkey'
 import * as removekey from './subcommands/removekey'
@@ -80,13 +81,16 @@ async function main() {
         }
     }
 
+    const conf: config.Config = config.load(args.config)
+    const ks: Keystore = new Keystore(conf.keystoreFile)
+
     let code = null
     switch (args.subcommand) {
-        case 'chat': code = await chat.main(args); break
-        case 'showkey': code = await showkey.main(args); break
-        case 'addkey': code = await addkey.main(args); break
-        case 'removekey': code = await removekey.main(args); break
-        case 'genkey': code = await genkey.main(args); break
+        case 'chat': code = await chat.main(args, conf, ks); break
+        case 'showkey': code = await showkey.main(args, conf, ks); break
+        case 'addkey': code = await addkey.main(args, conf, ks); break
+        case 'removekey': code = await removekey.main(args, conf, ks); break
+        case 'genkey': code = await genkey.main(args, conf, ks); break
     }
 
     process.exit(code)

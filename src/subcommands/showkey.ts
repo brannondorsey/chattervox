@@ -1,11 +1,9 @@
-import { Config, load } from '../config'
-import { Keystore, Key } from '../Keystore';
+import { Config } from '../config'
+import { Keystore, Key } from '../Keystore'
 
-export async function main(args: any): Promise<number> {
-    
-    const conf: Config = load(args.config)
-    const ks: Keystore = new Keystore(conf.keystoreFile)
+export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
 
+    conf; // intentionally unused
     if (args.callsign) {
         printKeys(args.callsign.toUpperCase(), ks)
     } else {
