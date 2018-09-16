@@ -42,8 +42,9 @@ export async function interactiveInit() {
 
 async function askUser(): Promise<Config> {
 
-    term(`\nWhat is your call sign? `)
-    const callsign: string = (await term.inputField().promise).trim().toUpperCase()
+    term(`\nWhat is your call sign (default: ${defaultConfig.callsign})? `)
+    let callsign: string = (await term.inputField().promise).trim().toUpperCase()
+    if (callsign === '') callsign = defaultConfig.callsign
 
     term(`\n(press ENTER to skip) What is your name or handle? `)
     let nick: string = await term.inputField().promise

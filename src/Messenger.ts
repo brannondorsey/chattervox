@@ -27,7 +27,7 @@ export class Messenger extends EventEmitter {
     constructor(config: Config) {
         super()
         this.config = config
-        this.ks = new Keystore('keystore.json')
+        this.ks = new Keystore(this.config.keystoreFile)
         if (this.ks.getKeyPairs(config.callsign).length === 0) {
             this.ks.genKeyPair(config.callsign)
         }
@@ -60,9 +60,18 @@ export class Messenger extends EventEmitter {
         const from: string = this.config.callsign
         let signature: Buffer = null
         if (sign) {
-            // TODO get signing key from config
-            const priv = this.ks.getKeyPairs(this.config.callsign)[0].private
-            signature = this.ks.sign(message, priv)
+            if (this.config.signingKey) {
+                const privates = this.ks.getKeyPairs(this.config.callsign)
+                                        .filter(key => key.public === this.config.signingKey)
+                                        .map(key => key.private)
+                if (privates.length > 0) {
+                    signature = this.ks.sign(message, privates[0])
+                } else {
+                    throw Error('No signing key was found in the keystore. Make sure your config.signingKey is in your keystore.')
+                }
+            } else {
+                throw Error(`sign is ${sign} but no config.signingKey ${this.config.signingKey}.`)
+            }
         }
 
         const packet: Buffer = await Packet.ToAX25Packet(from, to, message, signature)

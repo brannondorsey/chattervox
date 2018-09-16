@@ -1,12 +1,10 @@
 const { Messenger, Verification } = require('../build/Messenger.js')
+const { Config, load } = require('../build/config.js')
 
 async function main() {
 
-    const messenger = new Messenger({ 
-        callsign: 'N0CALL' ,
-        kissPort: '/tmp/kisstnc',
-        kissBaud: 9600
-    })
+    const conf = load()
+    const messenger = new Messenger(conf)
 
     messenger.on('open', (err) => {
         if (err) {
