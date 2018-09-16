@@ -70,7 +70,7 @@ export class Messenger extends EventEmitter {
                     throw Error('No signing key was found in the keystore. Make sure your config.signingKey is in your keystore.')
                 }
             } else {
-                throw Error(`sign is ${sign} but no config.signingKey ${this.config.signingKey}.`)
+                throw Error(`sign is ${sign} but config.signingKey "${this.config.signingKey}" is not in keystore.`)
             }
         }
 
