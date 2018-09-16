@@ -8,7 +8,7 @@ describe('Keystore', function() {
     const call = 'N0CALL'
     const path = './test/tmp-keystore.json'
     
-    if (fs.existsSync(path)) fs.unlink(path)
+    if (fs.existsSync(path)) fs.unlinkSync(path)
 
     it('should fail on construction with no path parameter', () => {
         assert.throws(() => new Keystore(), TypeError)
@@ -76,6 +76,6 @@ describe('Keystore', function() {
     })
 
     it(`should remove the keystore file at the end of the test`, () => {
-        fs.unlink(path)
+        fs.unlinkSync(path)
     })
 })
