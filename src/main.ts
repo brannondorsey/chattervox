@@ -30,6 +30,8 @@ function parseArgs(): any {
         description: 'Enter the chat room.'
     })
 
+    chat; // intentionally unused
+
     const showKey: ArgumentParser = subs.addParser('showkey', {
         addHelp: true,
         description: 'List keys.'
@@ -50,6 +52,7 @@ function parseArgs(): any {
         description: 'Remove a public key from the keystore.'
     })
 
+    removeKey.addArgument('callsign', { type: 'string' })
     removeKey.addArgument('publickey', { type: 'string' })
 
     const genKey: ArgumentParser = subs.addParser('genkey', {

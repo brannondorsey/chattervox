@@ -59,6 +59,7 @@ export class Keystore {
         return { public: pub, private: priv, curve: 'p192' }
     }
     /**
+     * Remove a Key object from the keystore, using the public key.
      * @param  {string} callsign
      * @param  {string} pubkeyHex
      * @returns {boolean} True if a key was removed from the keystore.

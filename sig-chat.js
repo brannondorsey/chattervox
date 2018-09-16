@@ -30,7 +30,7 @@ function sendData(message) {
 const tnc = new KISS_TNC('/tmp/kisstnc', 9600)
 process.on('SIGTERM', tnc.close)
 tnc.on('error', console.error)
-// tnc.on('data', onDataRecieved)
+tnc.on('data', onDataRecieved)
 tnc.open(() => {
     console.log('TNC opened')
     sendData('🤑')
