@@ -50,7 +50,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     ui.begin()
         
     const sign: boolean = typeof conf.signingKey === 'string'
-    await ui.inputLoop(conf.callsign, messenger, sign)        
+    await ui.inputLoop(conf.callsign, messenger, sign)
     
     return 0
 }

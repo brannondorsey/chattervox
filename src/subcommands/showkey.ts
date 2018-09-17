@@ -3,7 +3,6 @@ import { Keystore, Key } from '../Keystore'
 
 export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
 
-    conf; // intentionally unused
     if (args.callsign) {
         printKeys(args.callsign.toUpperCase(), ks)
     } else {
