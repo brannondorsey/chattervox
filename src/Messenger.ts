@@ -76,7 +76,12 @@ export class Messenger extends EventEmitter {
 
         const packet: Buffer = await Packet.ToAX25Packet(from, to, message, signature)
         if (this.tnc == null) throw Error('Error sending message with send(). The Messenger\'s TNC object is null. Are you sure it is connected?')
-        return new Promise((resolve) => this.tnc.send_data(packet, resolve))
+        return new Promise((resolve, reject) => {
+            this.tnc.send_data(packet, (err: Error) => {
+                if (err) reject(err)
+                resolve()
+            })
+        })
     }
 
     private async _onAX25DataRecieved(data: any) {
