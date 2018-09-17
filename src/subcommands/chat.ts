@@ -25,6 +25,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
         await messenger.openTNC()
     } catch (err) {
         console.error(`Error opening a serial connection to KISS TNC that should be at ${conf.kissPort}. Are you sure your TNC is running?`)
+        console.error(`If you have direwolf installed you can start it in another window with "direwolf -p -q d -t 0"`)
         return 1
     }
 

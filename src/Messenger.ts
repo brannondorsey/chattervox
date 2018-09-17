@@ -91,7 +91,7 @@ export class Messenger extends EventEmitter {
             packet = await Packet.FromAX25Packet(data.data)
         } catch (err) {
             if (err.name == 'InvalidPacket') {
-                console.log('recieved invalid packet, skipping')
+                // console.log('Received invalid packet, skipping')
                 return
             } else throw err
         }
