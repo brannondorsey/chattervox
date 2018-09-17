@@ -51,12 +51,12 @@ async function askUser(): Promise<Config> {
     if (nick.trim() === '') nick = null
 
     term(`\nDo you have a dedicated hardware TNC that you would like to use instead of direwolf (default: no)? `)
-    let dedicatedTNC: string = (await term.inputField().promise).trim().toLowerCase()
-    const launchDirewolf = !(dedicatedTNC === 'yes' || dedicatedTNC === 'y')
+    let hasDedicatedTNC: string = (await term.inputField().promise).trim().toLowerCase()
+    let dedicatedTNC: boolean = (hasDedicatedTNC === 'yes' || hasDedicatedTNC === 'y')
 
     let kissPort: string
     let kissBaud: number
-    if (!launchDirewolf) {
+    if (dedicatedTNC) {
         term(`\nWhat is the serial port device name of this TNC (e.g. /dev/ttyS0)? `)
         kissPort = (await term.inputField().promise).trim()
 
@@ -67,7 +67,6 @@ async function askUser(): Promise<Config> {
 
     const conf: Config = JSON.parse(JSON.stringify(defaultConfig))
     conf.callsign = callsign
-    conf.launchDirewolf = launchDirewolf
     if (kissPort) conf.kissPort = kissPort
     if (kissBaud) conf.kissBaud = kissBaud
     if (nick) conf.nicks[callsign] = nick

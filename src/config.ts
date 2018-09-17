@@ -10,9 +10,7 @@ export interface Config {
     keystoreFile: string,
     kissPort: string,
     kissBaud: number,
-    launchDirewolf: boolean,
     signingKey?: string,
-    direwolfPath?: string
 }
 
 export const defaultChattervoxDir = path.join(os.homedir(), '.chattervox')
@@ -26,7 +24,6 @@ export const defaultConfig: Config = {
     keystoreFile: defaultKeystorePath,
     kissPort: '/tmp/kisstnc',
     kissBaud: 9600,
-    launchDirewolf: true
 }
 
 /** Save a config file as JSON
