@@ -1,10 +1,14 @@
 {
   "name": "chattervox",
   "version": "0.0.1",
-  "description": "AX.25 HAM radio chatroom with support for binary compression and digital signatures.",
-  "main": "chattervox",
+  "description": "AX.25 HAM radio chat with support for binary compression and digital signatures.",
+  "main": "build/main.js",
+  "bin": {
+    "chattervox": "build/main.js"
+  },
   "scripts": {
     "build": "tsc",
+    "pkg": "pkg --out-path pkg/ --targets \"node8-linux-x64,node8-macos-x64,node8-win-x64\" .",
     "watch": "tsc --watch",
     "start": "node src/main.js",
     "test": "mocha --full-trace test"
@@ -20,18 +24,25 @@
   },
   "homepage": "https://github.com/brannondorsey/chattervox#readme",
   "dependencies": {
-    "@types/node": "^10.9.4",
     "argparse": "^1.0.10",
     "ax25": "git+https://github.com/echicken/node-ax25.git#124b496631fa448d95ac97553cdd1c8120d4f9cb",
-    "chalk": "^2.4.1",
     "command-exists": "^1.2.7",
     "elliptic": "^6.4.1",
     "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git",
-    "terminal-kit": "^1.26.2",
-    "typescript": "^3.0.3"
+    "terminal-kit": "^1.26.2"
   },
   "devDependencies": {
+    "typescript": "^3.0.3",
+    "@types/node": "^10.9.4",
     "@types/argparse": "^1.0.34",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "pkg": "^4.3.4"
+  },
+  "pkg": {
+    "scripts": [
+      "build/**/*.js", 
+      "node_modules/ax25/**/*.js",
+      "node_modules/terminal-kit/**/*.js"
+    ]
   }
 }
