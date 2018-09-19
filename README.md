@@ -6,6 +6,8 @@ Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of
 
 With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to.
 
+![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
+
 ## Download
 
 ~~Experimental cross-platform binary downloads are available on the releases page~~ (coming soon). Chattervox requires a serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC.
