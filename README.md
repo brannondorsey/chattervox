@@ -1,6 +1,6 @@
 # Chattervox
 
-An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡〰.
+An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡.
 
 Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of AX.25 that can be used with a terminal node controller (TNC) like [Direwolf](https://github.com/wb2osz/direwolf) to transmit and receive digitally signed messages using audio frequency shift keying modulation (AFSK). In the United States, it's illegal to broadcast encrypted messages on amateur radio frequencies. Chattervox respects this law, while using elliptic curve cryptography and digital signatures to protect against message spoofing.
 
