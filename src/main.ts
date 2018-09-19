@@ -1,4 +1,6 @@
 import { ArgumentParser, SubParser } from 'argparse'
+import * as fs from 'fs'
+import * as path from 'path'
 import * as config from './config'
 import { Keystore } from './Keystore'
 import * as chat from './subcommands/chat'
@@ -10,9 +12,13 @@ import { interactiveInit } from './ui/init'
 
 function parseArgs(): any {
 
+    const pkgBuff = fs.readFileSync(path.resolve(__dirname, '..', 'package.json'))
+    const pkgJSON: any = JSON.parse(pkgBuff.toString('utf8'))
+    
     const parser = new ArgumentParser({
-        version: 'v0.0.1',
-        description: 'AX.25 packet radio chat application/protocol with support for digital signatures and compression.'
+        prog: pkgJSON.name,
+        version: pkgJSON.version,
+        description: pkgJSON.description
     })
 
     parser.addArgument(['--config', '-c'], { 

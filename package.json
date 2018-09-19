@@ -1,16 +1,16 @@
 {
   "name": "chattervox",
   "version": "0.0.1",
-  "description": "AX.25 HAM radio chat with support for binary compression and digital signatures.",
+  "description": "An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡〰.",
   "main": "build/main.js",
   "bin": {
     "chattervox": "build/main.js"
   },
+  "preferGlobal": true,
   "scripts": {
     "build": "tsc",
     "pkg": "pkg --out-path pkg/ --targets \"node8-linux-x64,node8-macos-x64,node8-win-x64\" .",
     "watch": "tsc --watch",
-    "start": "node src/main.js",
     "test": "mocha --full-trace test"
   },
   "repository": {
