@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { ArgumentParser, SubParser } from 'argparse'
 import * as fs from 'fs'
 import * as path from 'path'

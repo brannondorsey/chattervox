@@ -1,11 +1,19 @@
 {
   "name": "chattervox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡〰.",
   "main": "build/main.js",
   "bin": {
     "chattervox": "build/main.js"
   },
+  "keywords": [
+    "ax25",
+    "packet radio",
+    "ham radio",
+    "amateur radio",
+    "ecdsa",
+    "digital signatures"
+  ],
   "preferGlobal": true,
   "scripts": {
     "build": "tsc",
