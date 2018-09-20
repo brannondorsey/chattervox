@@ -1,5 +1,9 @@
 # Pre-releases
 
+## v0.2.1
+
+- Add GPLv3.txt
+
 ## v0.2.0
 
 - Add direct message support with `@KC3LZO` ([#2](https://github.com/brannondorsey/chattervox/issues/2))
