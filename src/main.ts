@@ -79,7 +79,7 @@ function parseArgs(): any {
 }
 
 function validateArgs(args: any): void {
-    if (typeof args.callsign !== 'undefined' && !isCallsign(args.callsign)) {
+    if (args.callsign != null && !isCallsign(args.callsign)) {
         console.error(`${args.callsign} is not a valid callsign.`)
         if (args.callsign.includes('-')) {
             console.error(`callsign should not include an SSID for key management subcommands.`)

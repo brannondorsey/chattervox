@@ -1,5 +1,9 @@
 # Pre-releases
 
+## v0.2.2
+
+- Fix `showkey` bug that caused crash if the optional callsign parameter wasn't provided.
+
 ## v0.2.1
 
 - Add GPLv3.txt
