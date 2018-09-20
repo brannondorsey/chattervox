@@ -1,5 +1,10 @@
 # Pre-releases
 
+## v0.2.0
+
+- Add direct message support with `@KC3LZO` ([#2](https://github.com/brannondorsey/chattervox/issues/2))
+- Remove `test/Messenger.test.js`
+
 ## v0.1.0
 
 - Add ssid support.

@@ -1,7 +1,7 @@
 
 import { terminal as term } from 'terminal-kit'
 import { Messenger, MessageEvent, Verification } from '../Messenger';
-import { stationToCallsignSSID } from '../utils'
+import { stationToCallsignSSID, isCallsign, isCallsignSSID } from '../utils'
 
 term.on('key', (name: string , matches: string[], data: any): void => {
     if ( matches.includes('CTRL_C') || matches.includes('CTRL_D')) {
@@ -66,9 +66,16 @@ export async function printReceivedMessage(message: MessageEvent, callsign: stri
 export async function inputLoop(callsign: string, messenger: Messenger, sign: boolean): Promise<void> {
     while (true) {
         const text = (await prompt(callsign)).trim()
-        // TODO dynamic to addresses, not just CQ. "TOCALL: message" should only
-        // be sent appear to specific user.
-        if (text !== '') await messenger.send('CQ', text, sign)
+        if (text !== '') {
+            let to = 'CQ'
+            if (text.startsWith('@')) {
+                const space = text.indexOf(' ')
+                const callsign = space === -1 ? text.slice(1) : text.slice(1, space)
+                if (isCallsign(callsign) || isCallsignSSID(callsign))
+                to = callsign.toUpperCase()
+            }
+            await messenger.send(to, text, sign)
+        }
         term.eraseLine()
         const pos: { x: number, y: number } = await term.getCursorLocation()
         term.moveTo(0, pos.y)

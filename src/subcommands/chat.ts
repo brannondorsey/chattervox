@@ -19,7 +19,11 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        ui.printReceivedMessage(message, conf.callsign)
+        if (message.to.callsign === 'CQ' || 
+           (message.to.callsign === conf.callsign && 
+            message.to.ssid === conf.ssid)) {
+                ui.printReceivedMessage(message, conf.callsign)
+        }
     })
 
     try {

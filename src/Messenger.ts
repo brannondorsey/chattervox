@@ -112,8 +112,8 @@ export class Messenger extends EventEmitter {
         }
 
         const event: MessageEvent = {
-            to: packet.to, 
-            from: packet.from, 
+            to: { callsign: packet.to.callsign.trim(), ssid: packet.to.ssid }, 
+            from: { callsign: packet.from.callsign.trim(), ssid: packet.from.ssid }, 
             message: packet.message,
             verification
         }

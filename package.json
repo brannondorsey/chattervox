@@ -1,6 +1,6 @@
 {
   "name": "chattervox",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡〰.",
   "main": "build/main.js",
   "bin": {
