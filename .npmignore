@@ -1,1 +1,6 @@
+*.map
 .images/
+.vscode/
+test/
+pkg/
+
