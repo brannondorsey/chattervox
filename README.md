@@ -75,7 +75,7 @@ subcommands:
 
 ## The Protocol
 
-The chattervox packet is primitive and straightforward. It contains a simple header, an optional ECDSA digital signature, and a message payload that can be in plaintext or compressed. As of packet version 1, there is only one type of packet and there is no mechanism for delivery confirmation (think of it like UDP). It is expected to be transported via AX.25 Unnumbered Information (UI) packets the chattervox program relies on for sender and recipient information, as no such fields exists in the packet itself to conserve space.
+The chattervox packet is primitive and straightforward. It contains a simple header, an optional ECDSA digital signature, and a message payload that can be in plaintext or compressed. As of packet version 1, the protocol is connectionless. There is only one type of packet and there is no mechanism for delivery confirmation (think of it like UDP). It is expected to be transported via AX.25 Unnumbered Information (UI) packets, which the chattervox program relies on for sender and recipient information, as no such fields exists in the packet itself to conserve space.
 
 The protocol may be amended in the future to add new features, however, its simplicity should not be seen as a weakness. The goal of chattervox is singular: **Add cryptographic verifiability to text-based radio communication.**
 
