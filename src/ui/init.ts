@@ -1,4 +1,4 @@
-import { timeout } from '../utils'
+import { timeout, isCallsign } from '../utils'
 import { Config, defaultConfig, save, init, defaultConfigPath } from '../config'
 import { Keystore, Key } from '../Keystore'
 import { terminal as term } from 'terminal-kit'
@@ -42,13 +42,8 @@ export async function interactiveInit() {
 
 async function askUser(): Promise<Config> {
 
-    term(`\nWhat is your call sign (default: ${defaultConfig.callsign})? `)
-    let callsign: string = (await term.inputField().promise).trim().toUpperCase()
-    if (callsign === '') callsign = defaultConfig.callsign
-
-    term(`\n(press ENTER to skip) What is your name or handle? `)
-    let nick: string = await term.inputField().promise
-    if (nick.trim() === '') nick = null
+    let callsign: string = await promptCallsign()
+    let ssid: number = await promptSSID()
 
     term(`\nDo you have a dedicated hardware TNC that you would like to use instead of direwolf (default: no)? `)
     let hasDedicatedTNC: string = (await term.inputField().promise).trim().toLowerCase()
@@ -67,13 +62,31 @@ async function askUser(): Promise<Config> {
 
     const conf: Config = JSON.parse(JSON.stringify(defaultConfig))
     conf.callsign = callsign
+    conf.ssid = ssid
     if (kissPort) conf.kissPort = kissPort
     if (kissBaud) conf.kissBaud = kissBaud
-    if (nick) conf.nicks[callsign] = nick
     return conf
 }
 
-// interactiveInit().catch(err => {
-//     console.error(err)
-//     term.processExit()
-// })
+async function promptCallsign(): Promise<string> {
+    term(`\nWhat is your call sign (default: ${defaultConfig.callsign})? `)
+    let callsign: string = (await term.inputField().promise).trim().toUpperCase()
+    if (callsign === '') return defaultConfig.callsign
+    else if (isCallsign(callsign)) return callsign
+    else {
+        term('\nCallsign must be between 1 and 6 alphanumeric characters.')
+        return promptCallsign()
+    }
+}
+
+async function promptSSID(): Promise<number> {
+    term(`\nWhat SSID would you like to associate with this station (press ENTER to skip)? `)
+    let ssid: string = await term.inputField().promise
+    if (ssid.trim() === '') return 0
+    else if (!isNaN(parseInt(ssid))) {
+        let num = parseInt(ssid)
+        if (num >= 0 && num <= 15) return num
+    }
+    term('\nSSID must be a number between 0 and 15.')
+    return promptSSID()
+}

@@ -1,6 +1,7 @@
 
 import { terminal as term } from 'terminal-kit'
 import { Messenger, MessageEvent, Verification } from '../Messenger';
+import { stationToCallsignSSID } from '../utils'
 
 term.on('key', (name: string , matches: string[], data: any): void => {
     if ( matches.includes('CTRL_C') || matches.includes('CTRL_D')) {
@@ -26,10 +27,6 @@ function getColorFunction(callsign: string): TerminalFunction {
         term.brightBlue,
         term.brightMagenta
     ]
-
-    // for (let color of choices) {
-    //     color('How does this color look?')
-    // }
 
     if (!colorMap.hasOwnProperty(callsign)) {
         colorMap[callsign] = choices[Math.floor(Math.random() * choices.length)]
@@ -97,7 +94,8 @@ function printStyledText(message: MessageEvent): void {
     // else if (rand < 0.75) message.verification = Verification.Invalid
     // else message.verification = Verification.KeyNotFound
 
-    getColorFunction(message.from)(`${message.from}`)    
+    const from: string = stationToCallsignSSID(message.from)
+    getColorFunction(from)(`${from}`)    
     switch (message.verification) {
         
         case Verification.NotSigned:

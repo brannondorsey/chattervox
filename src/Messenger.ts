@@ -1,12 +1,13 @@
 import KISS_TNC from 'kiss-tnc'
 import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
-import { Packet } from './Packet.js'
-import { Config } from './config.js';
+import { Packet, Station } from './Packet.js'
+import { Config } from './config.js'
+import { callsignSSIDToStation } from './utils.js'
 
 export interface MessageEvent {
-    to: string 
-    from: string 
+    to: Station 
+    from: Station 
     message: string
     verification: Verification
 }
@@ -56,8 +57,10 @@ export class Messenger extends EventEmitter {
         this.emit('close')
     }
 
-    async send(to: string, message: string, sign: boolean) {
-        const from: string = this.config.callsign
+    async send(to: string | Station, message: string, sign: boolean) {
+        if (typeof to === 'string') to = callsignSSIDToStation(to)
+        const from: Station = { callsign: this.config.callsign, ssid: this.config.ssid }
+    
         let signature: Buffer = null
         if (sign) {
             if (this.config.signingKey) {
@@ -99,10 +102,10 @@ export class Messenger extends EventEmitter {
         let verification = Verification.NotSigned
         if (packet.signature) {
             // if we don't have a public key from that callsign
-            if (this.ks.getPublicKeys(packet.from).length === 0) {
+            if (this.ks.getPublicKeys(packet.from.callsign).length === 0) {
                 verification = Verification.KeyNotFound
             } else {
-                const verified = this.ks.verify(packet.from, packet.message, packet.signature)
+                const verified = this.ks.verify(packet.from.callsign, packet.message, packet.signature)
                 if (verified) verification = Verification.Valid
                 else verification = Verification.Invalid
             }

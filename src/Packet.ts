@@ -1,9 +1,15 @@
 import * as AX25 from 'ax25' // https://github.com/echicken/node-ax25/tree/es6rewrite
 import { compress, decompress } from './compression.js'
+import { callsignSSIDToStation } from './utils.js';
 
 export enum HeaderFlags {
     Compressed = 0x01,
     Signed = 0x2
+}
+
+export interface Station {
+    callsign: string,
+    ssid: number
 }
 
 export const MagicBytes = [0x7a, 0x39]
@@ -18,8 +24,8 @@ export interface Header {
 export class Packet {
 
     header: Header
-    from: string
-    to: string
+    from: Station
+    to: Station
     message: string
     signature: Buffer
     data: Buffer
@@ -43,8 +49,8 @@ export class Packet {
     async toAX25Packet(): Promise<any> {
         const packet = new AX25.Packet()
         packet.type = AX25.Masks.control.frame_types.u_frame.subtypes.ui
-        packet.source = { callsign : this.from, ssid : 0 }
-        packet.destination = { callsign : this.to, ssid : 0 }
+        packet.source = this.from
+        packet.destination = this.to
         packet.payload = await this.assemble()
         return packet.assemble()
     }
@@ -137,14 +143,17 @@ export class Packet {
 
     }
 
-    static async ToAX25Packet(fromCallsign: string, 
-                              toCallsign: string, 
+    static async ToAX25Packet(from: string | Station, 
+                              to: string | Station, 
                               utf8Text: string, 
                               signature?: Buffer): Promise<any> {
         
+        if (typeof from === 'string') from = callsignSSIDToStation(from)
+        if (typeof to === 'string') to = callsignSSIDToStation(to)
+
         const packet = new Packet()
-        packet.from = fromCallsign
-        packet.to = toCallsign
+        packet.from = from
+        packet.to = to
         packet.message = utf8Text
         
         if (signature) {
@@ -171,8 +180,8 @@ export class Packet {
         }
 
         const packet = new Packet()
-        packet.from = ax25Packet.source.callsign.trim()
-        packet.to = ax25Packet.destination.callsign.trim()
+        packet.from = ax25Packet.source
+        packet.to = ax25Packet.destination
         await packet.disassemble(ax25Packet.payload)
         return packet
     }

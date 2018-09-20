@@ -2,6 +2,7 @@ import { Config } from '../config'
 import { Keystore } from '../Keystore'
 import { Messenger, MessageEvent } from '../Messenger'
 import * as ui from '../ui/chat'
+import { stationToCallsignSSID } from '../utils';
 
 export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
 
@@ -33,7 +34,8 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     
     // only sign if the user's config has a signing key
     const sign: boolean = typeof conf.signingKey === 'string'
-    await ui.inputLoop(conf.callsign, messenger, sign)
+    const callsignSSID: string = stationToCallsignSSID({ callsign: conf.callsign, ssid: conf.ssid })
+    await ui.inputLoop(callsignSSID, messenger, sign)
 
     return 0
 }

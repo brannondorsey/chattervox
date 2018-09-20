@@ -64,11 +64,19 @@ describe('Packet', () => {
             })
 
             it('should have a from callsign', () => {
-                assert.ok(typeof packet.from === 'string')
+                assert.ok(typeof packet.from.callsign === 'string')
             })
 
             it('should have a to callsign', () => {
-                assert.ok(typeof packet.to === 'string')
+                assert.ok(typeof packet.to.callsign === 'string')
+            })
+
+            it('should have a from ssid', () => {
+                assert.ok(typeof packet.from.ssid === 'number')
+            })
+
+            it('should have a to ssid', () => {
+                assert.ok(typeof packet.to.ssid === 'number')
             })
 
             it('header.compressed should be false', () => {
@@ -104,11 +112,19 @@ describe('Packet', () => {
             })
 
             it('should have a from callsign', () => {
-                assert.ok(typeof packet.from === 'string')
+                assert.ok(typeof packet.from.callsign === 'string')
             })
 
             it('should have a to callsign', () => {
-                assert.ok(typeof packet.to === 'string')
+                assert.ok(typeof packet.to.callsign === 'string')
+            })
+
+            it('should have a from ssid', () => {
+                assert.ok(typeof packet.from.ssid === 'number')
+            })
+
+            it('should have a to ssid', () => {
+                assert.ok(typeof packet.to.ssid === 'number')
             })
 
             it('header.compressed should be false', () => {
@@ -140,11 +156,19 @@ describe('Packet', () => {
             })
 
             it('should have a from callsign', () => {
-                assert.ok(typeof packet.from === 'string')
+                assert.ok(typeof packet.from.callsign === 'string')
             })
 
             it('should have a to callsign', () => {
-                assert.ok(typeof packet.to === 'string')
+                assert.ok(typeof packet.to.callsign === 'string')
+            })
+
+            it('should have a from ssid', () => {
+                assert.ok(typeof packet.from.ssid === 'number')
+            })
+
+            it('should have a to ssid', () => {
+                assert.ok(typeof packet.to.ssid === 'number')
             })
 
             it('header.compressed should be true', () => {
@@ -180,11 +204,19 @@ describe('Packet', () => {
             })
 
             it('should have a from callsign', () => {
-                assert.ok(typeof packet.from === 'string')
+                assert.ok(typeof packet.from.callsign === 'string')
             })
 
             it('should have a to callsign', () => {
-                assert.ok(typeof packet.to === 'string')
+                assert.ok(typeof packet.to.callsign === 'string')
+            })
+
+            it('should have a from ssid', () => {
+                assert.ok(typeof packet.from.ssid === 'number')
+            })
+
+            it('should have a to ssid', () => {
+                assert.ok(typeof packet.to.ssid === 'number')
             })
 
             it('header.compressed should be true', () => {

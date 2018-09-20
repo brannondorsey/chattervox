@@ -11,6 +11,7 @@ import * as removekey from './subcommands/removekey'
 import * as showkey from './subcommands/showkey'
 import * as genkey from './subcommands/genkey'
 import { interactiveInit } from './ui/init'
+import { isCallsign } from './utils'
 
 function parseArgs(): any {
 
@@ -77,9 +78,20 @@ function parseArgs(): any {
     return parser.parseArgs()
 }
 
+function validateArgs(args: any): void {
+    if (typeof args.callsign !== 'undefined' && !isCallsign(args.callsign)) {
+        console.error(`${args.callsign} is not a valid callsign.`)
+        if (args.callsign.includes('-')) {
+            console.error(`callsign should not include an SSID for key management subcommands.`)
+        }
+        process.exit(1)
+    } 
+}
+
 async function main() {
 
     const args = parseArgs()
+    validateArgs(args)
 
     // initialize a new config
     if (!config.exists(args.config)) {

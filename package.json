@@ -1,6 +1,6 @@
 {
   "name": "chattervox",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡〰.",
   "main": "build/main.js",
   "bin": {
@@ -19,14 +19,14 @@
     "build": "tsc",
     "pkg": "pkg --out-path pkg/ --targets \"node8-linux-x64,node8-macos-x64,node8-win-x64\" .",
     "watch": "tsc --watch",
-    "test": "mocha --full-trace test"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brannondorsey/chattervox.git"
   },
   "author": "Brannon Dorsey <brannon@brannondorsey.com>",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/brannondorsey/chattervox/issues"
   },

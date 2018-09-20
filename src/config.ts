@@ -6,7 +6,7 @@ import { Keystore } from './Keystore'
 export interface Config {
     readonly version: number,
     callsign: string,
-    nicks: { [callsign: string]: string },
+    ssid: number,
     keystoreFile: string,
     kissPort: string,
     kissBaud: number,
@@ -18,9 +18,9 @@ export const defaultConfigPath = path.join(defaultChattervoxDir, 'config.json')
 export const defaultKeystorePath = path.join(defaultChattervoxDir, 'keystore.json')
 
 export const defaultConfig: Config = {
-    version: 1,
+    version: 2,
     callsign: 'N0CALL',
-    nicks: {},
+    ssid: 0,
     keystoreFile: defaultKeystorePath,
     kissPort: '/tmp/kisstnc',
     kissBaud: 9600,
