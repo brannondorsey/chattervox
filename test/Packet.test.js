@@ -23,16 +23,16 @@ describe('Packet', () => {
 
         it('should construct an AX25 Packet with a short message and a signature', async () => {
             const signature = ks.sign(shortMessage, private)
-            shortSignedAX25Packet = await Packet.ToAX25Packet('N0CALL', 'CQ', shortMessage, signature)
+            shortSignedAX25Packet = await Packet.ToAX25Packet('N0CALL-1', 'KC3LZO', shortMessage, signature)
         })
 
         it('should construct an AX25 Packet with a long message and no signature', async () => {
-            longUnsignedAX25Packet = await Packet.ToAX25Packet('N0CALL', 'CQ', longMessage)
+            longUnsignedAX25Packet = await Packet.ToAX25Packet('N0CALL', 'KC3LZO-2', longMessage)
         })
 
         it('should construct an AX25 Packet with a long message and a signature', async () => {
             const signature = ks.sign(longMessage, private)
-            longSignedAX25Packet = await Packet.ToAX25Packet('N0CALL', 'CQ', longMessage, signature)
+            longSignedAX25Packet = await Packet.ToAX25Packet('N0CALL-3', 'KC3LZO-3', longMessage, signature)
         })
     })
 

@@ -11,15 +11,14 @@ export function stationToCallsignSSID(station: Station): string {
         `${station.callsign}-${station.ssid}` : station.callsign
 }
 
-export function callsignSSIDToStation(callsign: string): Station {
-    if (callsign.includes('-')) {
-        const parts = callsign.split('-')
-        if (parts.length !== 2) throw TypeError(`Invalid callsign + SSID combo: ${callsign}`)
-        const ssid = parseInt(parts[1])
-        if (ssid < 0 || ssid > 15) throw TypeError(`Invalid SSID in ${callsign}`)
-        return { callsign: parts[0], ssid }
+export function callsignSSIDToStation(callsignSSID: string): Station {
+    if (isCallsignSSID(callsignSSID)) {
+        const [callsign, ssid] = callsignSSID.split('-')
+        return { callsign: callsign, ssid: parseInt(ssid) }
+    } else if(isCallsign(callsignSSID)) {
+        return { callsign: callsignSSID, ssid: 0 }
     } else {
-        return { callsign, ssid: 0 }
+        throw TypeError(`Invalid callsign: ${callsignSSID}`)
     }
 }
 
@@ -34,4 +33,10 @@ export function isCallsign(callsign: string): boolean {
         return false
     }
     return true
+}
+
+export function isCallsignSSID(callsignSSID: string): boolean {
+    if ((callsignSSID.match(/-/g) || []).length !== 1) return false
+    const [callsign, ssid] = callsignSSID.split('-')
+    return parseInt(ssid) >= 0 && parseInt(ssid) <= 15 && isCallsign(callsign)
 }
