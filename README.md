@@ -6,13 +6,22 @@ An AX.25 packet radio chat protocol with support for digital signatures and bina
 
 Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of AX.25 that can be used with a terminal node controller (TNC) like [Direwolf](https://github.com/wb2osz/direwolf) to transmit and receive digitally signed messages using audio frequency shift keying modulation (AFSK). In the United States, it's illegal to broadcast encrypted messages on amateur radio frequencies. Chattervox respects this law, while using elliptic curve cryptography and digital signatures to protect against message spoofing.
 
-With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to.
+With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md).
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
 
 ## Prerequisites
 
 Chattervox requires a linux computer and a serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC which can be run on the same computer hosting the `chattervox` application.
+
+You'll also need a radio and a cable to connect the microphone and speaker from the radio to your linux machine. I recommend the following equipment, especially if you're on a budget:
+
+- $24 Baofeng UV-5R 4-watt radio. This is the absolute best radio you can buy for that price.
+- $18 [BTech APRS cable](https://www.amazon.com/BTECH-APRS-K1-Interface-APRSDroid-Compatible/dp/B01LMIBAZW&keywords=btech+aprs+cable) (3.5mm TRRS to 3.5mm and 2.5mm audio cable)
+
+You can also make the cable yourself if you prefer. Check out [this zine](https://books.vvvvvvaria.org/read/41/pdf) for instructions. 
+
+Finally, to operate legally on amateur radio frequencies, you'll need an amateur radio license.
 
 ## Download
 
