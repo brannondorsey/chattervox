@@ -1,5 +1,7 @@
 # Chattervox
 
+![Travis CI Build Image](https://travis-ci.com/brannondorsey/chattervox.svg?branch=master)
+
 An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡.
 
 Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of AX.25 that can be used with a terminal node controller (TNC) like [Direwolf](https://github.com/wb2osz/direwolf) to transmit and receive digitally signed messages using audio frequency shift keying modulation (AFSK). In the United States, it's illegal to broadcast encrypted messages on amateur radio frequencies. Chattervox respects this law, while using elliptic curve cryptography and digital signatures to protect against message spoofing.
@@ -8,9 +10,13 @@ With amateur packet radio anyone can pretend to be anyone else. With Chattervox,
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
 
+## Prerequisites
+
+Chattervox requires a linux computer and a serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC which can be run on the same computer hosting the `chattervox` application.
+
 ## Download
 
-~~Experimental cross-platform binary downloads are available on the releases page~~ (coming soon). Chattervox requires a serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC.
+Binary downloads are available for Linux x64 and x86 architectures on the [releases page](https://github.com/brannondorsey/chattervox/releases).
 
 If you have `npm`, that is the preferred method of install as it allows for the easiest upgrade to the latest version. If you prefer to "build" it from Typescript source and run it as a Node.js app, you can do that as well.
 
