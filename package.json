@@ -17,7 +17,7 @@
   "preferGlobal": true,
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg --out-path pkg/ --targets \"node8-linux-x64,node8-macos-x64,node8-win-x64\" .",
+    "pkg": "bash ./pkg.sh",
     "watch": "tsc --watch",
     "test": "mocha test"
   },
