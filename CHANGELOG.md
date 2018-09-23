@@ -1,5 +1,14 @@
 # Pre-releases
 
+## v0.3.0
+
+- Add `config.validate()`.
+- Add appropriate `--config` handling ([#4](https://github.com/brannondorsey/chattervox/issues/4)).
+- Fix several bugs dealing with loading config files.
+- Add `utils.isSSID()`.
+- Modify `utils.isCallsign()` to check if callsign is between 1 and 6 characters.
+- Add utils and config tests.
+
 ## v0.2.2
 
 - Fix `showkey` bug that caused crash if the optional callsign parameter wasn't provided.

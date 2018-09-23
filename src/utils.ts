@@ -27,6 +27,9 @@ export function callsignSSIDToStation(callsignSSID: string): Station {
 export function isCallsign(callsign: string): boolean {
     if (typeof callsign !== 'string' || callsign.length > 6) return false
     callsign = callsign.toUpperCase().replace(/\s*$/g, "")
+    // AX.25 has a built-in hard limit of six characters, which means a 
+    // seven-character callsign cannot be used in an AX.25 network. 
+    if (callsign.length < 1 || callsign.length > 6) return false
     for(let c = 0; c < callsign.length; c++) {
         let a: number = callsign[c].charCodeAt(0)
         if((a >= 48 && a <= 57) || (a >= 65 && a <= 90)) continue
@@ -38,5 +41,11 @@ export function isCallsign(callsign: string): boolean {
 export function isCallsignSSID(callsignSSID: string): boolean {
     if ((callsignSSID.match(/-/g) || []).length !== 1) return false
     const [callsign, ssid] = callsignSSID.split('-')
-    return parseInt(ssid) >= 0 && parseInt(ssid) <= 15 && isCallsign(callsign)
+    return isCallsign(callsign) && isSSID(parseInt(ssid))
+}
+
+export function isSSID(ssid: number) {
+    if (typeof ssid !== 'number') 
+        throw TypeError('ssid must be a number type')
+    return ssid >= 0 && ssid <= 15
 }

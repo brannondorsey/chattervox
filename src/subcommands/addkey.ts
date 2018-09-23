@@ -5,7 +5,7 @@ import { Keystore } from '../Keystore';
 export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
     
     ks.addPublicKey(args.callsign.toUpperCase(), args.publickey)
-    save(conf)
+    save(conf, args.config)
     
     return 0
 }

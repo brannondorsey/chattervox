@@ -104,7 +104,14 @@ async function main() {
         }
     }
 
-    const conf: config.Config = config.load(args.config)
+    let conf: config.Config = null
+    try {
+        conf = config.load(args.config)
+    } catch(err) {
+        console.error(`Error loading config file from "${args.config}".`)
+        console.error(err.message)
+        process.exit(1)
+    }
     const ks: Keystore = new Keystore(conf.keystoreFile)
 
     let code = null

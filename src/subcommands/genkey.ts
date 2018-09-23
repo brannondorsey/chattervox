@@ -5,7 +5,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     
     const key: Key = ks.genKeyPair(conf.callsign)
     if (args.makeSigning) conf.signingKey = key.public
-    save(conf)
+    save(conf, args.config)
     console.log(key.public)
 
     return 0
