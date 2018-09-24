@@ -6,7 +6,9 @@ An AX.25 packet radio chat protocol with support for digital signatures and bina
 
 Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of AX.25 that can be used with a terminal node controller (TNC) like [Direwolf](https://github.com/wb2osz/direwolf) to transmit and receive digitally signed messages using audio frequency shift keying modulation (AFSK). In the United States, it's illegal to broadcast encrypted messages on amateur radio frequencies. Chattervox respects this law, while using elliptic curve cryptography and digital signatures to protect against message spoofing.
 
-With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md). Tutorial coming soon!
+With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md) or the discussion about chattervox on [hackernews](https://news.ycombinator.com/item?id=18058031).
+
+> **UPDATE** (September 24th, 2018): Please understand that this software is in **beta** and I ask for your patience until development stabilizes. While I'm very excited to see that interest in the project is high, It's quite unexpected and I have spent very little time testing the software (aside from automated tests). If you have a problem, [please submit a detailed issue](https://github.com/brannondorsey/chattervox/issues) and I'll have a look. I'll be writing a tutorial explaining how to get up and running with chattervox very soon.
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
 
