@@ -75,7 +75,7 @@ chattervox showkey
 usage: chattervox [-h] [-v] [--config CONFIG]
                   {chat,showkey,addkey,removekey,genkey} ...
 
-An AX.25 HAM radio chat protocol with support for digital signatures
+An AX.25 ham radio chat protocol with support for digital signatures
 and binary compression.
 
 Optional arguments:
