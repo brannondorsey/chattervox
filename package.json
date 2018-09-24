@@ -20,6 +20,7 @@
     "pkg": "bash ./pkg.sh",
     "watch": "tsc --watch",
     "test": "mocha test",
+    "coverage": "nyc --reporter=html --reporter=text mocha test && rm -rf .nyc_output/",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "repository": {
