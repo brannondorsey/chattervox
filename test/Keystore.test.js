@@ -8,7 +8,13 @@ describe('Keystore', function() {
     const call = 'N0CALL'
     const path = './test/tmp-keystore.json'
     
-    if (fs.existsSync(path)) fs.unlinkSync(path)
+    before(() => {
+        if (fs.existsSync(path)) fs.unlinkSync(path)
+    })
+
+    after(() => {
+        fs.unlinkSync(path)
+    })
 
     it('should fail on construction with no path parameter', () => {
         assert.throws(() => new Keystore(), TypeError)
@@ -68,14 +74,56 @@ describe('Keystore', function() {
         assert.ok(ks.getPublicKeys('DEADBEEF').length === 0)
     })
 
-    it(`should not revoked public keys that don't exist in the keystore`, () => {
+    it(`should not revoked public keys where callsign isn't in the keystore`, () => {
         const pubs = ks.getPublicKeys(call)
         const revoked = ks.revoke('TEST', pubs[0])
-        assert.ok(revoked === false)
+        assert.equal(false, revoked)
         assert.ok(ks.getPublicKeys('TEST').length === 0)
     })
 
-    it(`should remove the keystore file at the end of the test`, () => {
-        fs.unlinkSync(path)
+    it(`should not revoked public keys that don't exist in the keystore`, () => {
+        const revoked = ks.revoke(call, '04c89d36628646335c3764bf33072a69e2787d1277639fb007625d7ee9df2139f01dbba76072eac810ff19b2893bb407ca')
+        const numBefore = ks.getPublicKeys(call).length  
+        assert.ok(revoked === false)
+        assert.equal(numBefore, ks.getPublicKeys(call).length)
     })
+
+    it(`should return an empty array of keypairs if callsign is not in the keystore`, () => {
+        assert.deepEqual([], ks.getKeyPairs('UNSEEN'))
+    })
+
+    it(`should add a new public key`, () => {
+        ks.addPublicKey('KC3LZO', '04c89d36628646335c3764bf33072a69e2787d1277639fb007625d7ee9df2139f01dbba76072eac810ff19b2893bb407ca')
+    })
+
+    it(`should add a second public key`, () => {
+        ks.addPublicKey('KC3LZO', '0470326b0d79c816ec4b0b2cc44c76973b3361e53b0929127da7d16c9da8be8cf2eb934894cec50a48e22fd39f8ef3892f')
+    })
+
+    it(`should error if callsign is undefined`, () => {
+        assert.throws(() => {
+            ks.addPublicKey(undefined, '04c89d36628646335c3764bf33072a69e2787d1277639fb007625d7ee9df2139f01dbba76072eac810ff19b2893bb407ca')
+        })
+    })
+
+    it(`should error if publickey is undefined`, () => {
+        assert.throws(() => {
+            ks.addPublicKey('KC3LZO', undefined)
+        })
+    })
+
+    it(`_addKey() should error if privatekey is not undefined and not a string`, () => {
+        assert.throws(() => {
+            ks._addKey('KC3LZO', '04c89d36628646335c3764bf33072a69e2787d1277639fb007625d7ee9df2139f01dbba76072eac810ff19b2893bb407ca', true)
+        })
+    })
+
+    it(`should have three callsigns stored`, () => {
+        assert.deepEqual([ 'N0CALL', 'DEADBEEF', 'KC3LZO' ], ks.getCallsigns())
+    })
+
+    it(`should load an existing keystore from disk on construction`, () => {
+        const ks = new Keystore(path)
+    })
+
 })
