@@ -39,7 +39,7 @@ Yes! Well, it depends. If you broadcast digital data on the airwaves you have to
 
 If you're not a licensed amateur you can still play around with chattervox! Chattervox uses audio to transmit messages, so you can use it independent of radio if you'd like. For instance, if you have a speaker and microphone, you can use it in a small room. Otherwise, you can probably use it over the internet as well by live streaming audio from your computer. If you are interested in using "on the air", there isn't a ton of unlicensed radio spectrum, at least in the US. You could probably get away with broadcasting on low power on FMRS (walky-talky) and MURS (Multi-use radio service) frequency bands without getting caught 😉, but technically digital modes are prohibited on those frequencies as well. Depending on where you are located, you may also be able to find equipment that operates in the unlicensed [industrial, scientific, and medical (ISM)](https://en.wikipedia.org/wiki/ISM_band) radio bands. 
 
-All that said, obtaining a HAM license is pretty easy if you devote a few nights to [studying](https://hamstudy.org/). Once you've got a license you can legally use this protocol on tons of spectrum at high-power levels.
+All that said, obtaining a ham license is pretty easy if you devote a few nights to [studying](https://hamstudy.org/). Once you've got a license you can legally use this protocol on tons of spectrum at high-power levels.
 
 ## What does chattervox use for digital signatures?
 
