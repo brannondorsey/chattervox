@@ -6,7 +6,7 @@ An AX.25 packet radio chat protocol with support for digital signatures and bina
 
 Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of AX.25 that can be used with a terminal node controller (TNC) like [Direwolf](https://github.com/wb2osz/direwolf) to transmit and receive digitally signed messages using audio frequency shift keying modulation (AFSK). In the United States, it's illegal to broadcast encrypted messages on amateur radio frequencies. Chattervox respects this law, while using elliptic curve cryptography and digital signatures to protect against message spoofing.
 
-With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md).
+With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md). Tutorial coming soon!
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
 
@@ -99,10 +99,16 @@ The protocol may be amended in the future to add new features, however, its simp
 | Byte Offset       | # of Bits     | Name                                | Value              | Description 
 | ----------------- | ------------- | ----------------------------------- | ------------------ | ----------- 
 | 0x0000            | 16            | Magic Header                        | 0x7a39             | A constant two-byte value used to identify chattervox packets.
-| 0x0003            | 8             | Version Byte                        | Number             | A protocol version number between 1-255.
-| 0x0004            | 6             | Unused Flag Bits                    | Null               | Reserved for future use.
-| 0x0004            | 1             | Digital Signature Flag              | Bit                | A value of 1 indicates that the message contains a ECDSA digital signature.
-| 0x0004            | 1             | Compression Flag                    | Bit                | A value of 1 indicates that the message payload is compressed.
-| [0x0005]          | [8]           | [Signature Length]                  | Number             | The length in bytes of the digital signature. This field is only included if the Digital Signature Flag is set.
-| [0x0005 or 0x0006]| [0-2048]      | [Digital Signature]                 | Bytes              | The ECDSA digital signature created using a SHA256 hash of the message contents and the sender's private key.
-| 0x0005-0x105      | 0-∞           | Message                             | Bytes              | The packet's UTF-8 message payload. If the Compression Flag is set the contents of this buffer is a [raw DEFLATE buffer](https://nodejs.org/api/zlib.html#zlib_zlib_deflateraw_buffer_options_callback) containing the UTF-8 message.
+| 0x0002            | 8             | Version Byte                        | Number             | A protocol version number between 1-255.
+| 0x0003            | 6             | Unused Flag Bits                    | Null               | Reserved for future use.
+| 0x0003            | 1             | Digital Signature Flag              | Bit                | A value of 1 indicates that the message contains a ECDSA digital signature.
+| 0x0003            | 1             | Compression Flag                    | Bit                | A value of 1 indicates that the message payload is compressed.
+| [0x0004]          | [8]           | [Signature Length]                  | Number             | The length in bytes of the digital signature. This field is only included if the Digital Signature Flag is set.
+| [0x0004 or 0x0005]| [0-2048]      | [Digital Signature]                 | Bytes              | The ECDSA digital signature created using a SHA256 hash of the message contents and the sender's private key.
+| 0x0004-0x104      | 0-∞           | Message                             | Bytes              | The packet's UTF-8 message payload. If the Compression Flag is set the contents of this buffer is a [raw DEFLATE buffer](https://nodejs.org/api/zlib.html#zlib_zlib_deflateraw_buffer_options_callback) containing the UTF-8 message.
+
+[] indicates an optional field.
+
+### TypeScript chattervox client
+
+This repository serves as the first implementation of the protocol. The `chattervox` command-line tool acts as a client to send and receive chattervox packets in combination with a TNC. This implementation creates a new ECDSA keypair the first time it's run and includes a digital signature for each message (so long as there remains a `signingKey` in `~/.chattervox/config.json`). Each message is temporarily compressed by the client before it's sent in an attempt to measure the efficiency of the DEFLATE compression algorithm. If the compressed version is smaller than the uncompressed version, the compressed buffer is used as the message payload and the compression bit is set in the chattervox packet. If the plaintext version is smaller, no compression is used and the original message text is used as the payload.
