@@ -11,14 +11,21 @@ export function stationToCallsignSSID(station: Station): string {
         `${station.callsign}-${station.ssid}` : station.callsign
 }
 
+/**
+ * @function callsignSSIDToStation
+ * @param  {string} callsignSSID
+ * @throws {TypeError} If callsignSSID is invalid
+ * @returns Station
+ */
 export function callsignSSIDToStation(callsignSSID: string): Station {
     if (isCallsignSSID(callsignSSID)) {
-        const [callsign, ssid] = callsignSSID.split('-')
-        return { callsign: callsign, ssid: parseInt(ssid) }
+        const [callsign, ssidStr] = callsignSSID.split('-')
+        const ssid = parseInt(ssidStr)
+        return { callsign: callsign, ssid: ssid }
     } else if(isCallsign(callsignSSID)) {
         return { callsign: callsignSSID, ssid: 0 }
     } else {
-        throw TypeError(`Invalid callsign: ${callsignSSID}`)
+        throw TypeError(`Invalid callsignSSID: ${callsignSSID}`)
     }
 }
 

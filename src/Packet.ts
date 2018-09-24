@@ -96,23 +96,17 @@ export class Packet {
         if (!Buffer.isBuffer(data)) throw TypeError('Invalid data must be a Buffer')
 
         if (data.length < 4) {
-            const error = TypeError('Invalid packet, too few bytes.')
-            error.name = 'InvalidPacket'
-            throw error
+            throw TypeError('Invalid packet, too few bytes.')
         }
 
         const magic = data.slice(0, 2)
         if (magic[0] !== MagicBytes[0] || magic[1] !== MagicBytes[1]) {
-            const err = TypeError(`Invalid magic bytes in packet header. This is not a CV Packet.`)
-            err.name = 'InvalidPacket'
-            throw err
+            throw TypeError(`Invalid magic bytes in packet header. This is not a CV Packet.`)
         }
 
         const version = data[2]
         if (version !== 1) {
-            const err = TypeError(`Invalid packet version: ${version}`)
-            err.name = 'InvalidPacket'
-            throw err
+            throw TypeError(`Invalid packet version: ${version}`)
         }
 
         const flags = data[3]

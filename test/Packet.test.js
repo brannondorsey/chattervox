@@ -16,7 +16,7 @@ describe('Packet', () => {
     let longUnsignedAX25Packet = null
     let longSignedAX25Packet = null
 
-    describe('#ToAX25Packet()', () => {
+    describe('ToAX25Packet()', () => {
         it('should construct an AX25 Packet with a short message and no signature', async () => {
             shortUnsignedAX25Packet = await Packet.ToAX25Packet('N0CALL', 'CQ', shortMessage)
         })
@@ -34,18 +34,31 @@ describe('Packet', () => {
             const signature = ks.sign(longMessage, private)
             longSignedAX25Packet = await Packet.ToAX25Packet('N0CALL-3', 'KC3LZO-3', longMessage, signature)
         })
+
+        it('should error constructing an AX25 Packet with a signature that is greater than 256 bytes', async () => {
+            const buff = Buffer.alloc(512)            
+            try {
+                await Packet.ToAX25Packet('N0CALL', 'CQ', shortMessage, buff)
+                assert.fail('No error creating packet with signature length 512')
+            } catch (err) {
+                assert.equal('signature is larger than 256 bytes', err.message)
+            }
+        })
     })
 
-    describe('#FromAX25Packet()', () => {
+    describe('FromAX25Packet()', () => {
         
-        it('should error with a useful name on an invalid packet', async() => {
-            try {
-                const packet = await Packet.FromAX25Packet(Buffer.from([0x10, 0x11, 0x12, 0x13]))
-                assert.fail('Invalid packet must throw an error')
-            } catch (err) {
-                if (err.name === 'InvalidPacket') assert.ok(true)
-                else throw err
-            }
+        describe('should error when creating invalid packets', () => {
+
+            it ('should error if packet contains less than four bytes', async () => {
+                try {
+                    await Packet.FromAX25Packet(Buffer.from([0x10, 0x11, 0x12]))
+                    assert.fail('Invalid packet must throw an error')
+                } catch (err) {
+                    assert.equal('InvalidPacket', err.name)
+                }
+            })
+            
         })
 
         describe('short packet no signature', () => {
@@ -237,10 +250,3 @@ describe('Packet', () => {
         fs.unlinkSync('tmp-keystore.json')
     })
 })
-
-// async function main() {
-//    const ax25Packet = await Packet.ToAX25Packet('N0CALL', 'CQ', 'you compressed this?')
-//    await Packet.FromAX25Packet(ax25Packet)
-// }
-
-// main()

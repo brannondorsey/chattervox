@@ -30,6 +30,16 @@ describe('utils', () => {
             const shouldBe = { callsign: 'KC3LZO', ssid: 14 }
             assert.deepEqual(result, shouldBe)
         })
+
+        it('should throw an error if the callsign is invalid', () => {
+            const callsignSSID = 'TESTTEST-10'
+            assert.throws(() => utils.callsignSSIDToStation(callsignSSID), TypeError)
+        })
+
+        it('should throw an error if the ssid is invalid', () => {
+            const callsignSSID = 'KC3LZO-100'
+            assert.throws(() => utils.callsignSSIDToStation(callsignSSID), TypeError)
+        })
     })
 
     describe('isCallsign()', () => {
@@ -44,6 +54,10 @@ describe('utils', () => {
 
         it('should report that an empty string is not a callsign', () => {
             assert.equal(false, utils.isCallsign(''))
+        })
+
+        it('should report #?!~/. is not a callsign', () => {
+            assert.equal(false, utils.isCallsign('#?!~/.'))
         })
 
         it('should report that a seven letter callsign is not a callsign. This is an AX25 limitation.', () => {
