@@ -1,5 +1,15 @@
 # Pre-releases
 
+## v0.3.1
+
+- Add details about the TypeScript implementation of the protocol
+- Fix off-by-one error in protocol documentation ([#8](https://github.com/brannondorsey/chattervox/issues/8))
+- Add [FAQ](FAQ.md) ([#5](https://github.com/brannondorsey/chattervox/issues/5))
+- Only supporting linux for now (this was always true, but now we are making it explicit)
+- Add `pkg.sh` script, run by `npm run pkg`
+- Add test coverage with istanbul/nyc and coveralls
+- Add continuous integration with Travis CI
+
 ## v0.3.0
 
 - Add `config.validate()`.

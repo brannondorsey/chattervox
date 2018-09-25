@@ -3,4 +3,5 @@
 .vscode/
 test/
 pkg/
-
+coverage/
+.travis.yml
