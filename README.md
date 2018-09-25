@@ -1,6 +1,6 @@
 # Chattervox
 
-![Travis CI Build Image](https://travis-ci.com/brannondorsey/chattervox.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/brannondorsey/chattervox/badge.svg?branch=master)](https://coveralls.io/github/brannondorsey/chattervox?branch=master)
+[![Travis CI Build Image](https://travis-ci.com/brannondorsey/chattervox.svg?branch=master)](https://travis-ci.com/brannondorsey/chattervox) [![Coverage Status](https://coveralls.io/repos/github/brannondorsey/chattervox/badge.svg?branch=master)](https://coveralls.io/github/brannondorsey/chattervox?branch=master)
 
 An AX.25 packet radio chat protocol with support for digital signatures and binary compression. Like IRC over radio waves 📡.
 

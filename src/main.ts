@@ -4,7 +4,7 @@ import { ArgumentParser, SubParser } from 'argparse'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as config from './config'
-import { Keystore } from './Keystore'
+import { Keystore, Key } from './Keystore'
 import * as chat from './subcommands/chat'
 import * as addkey from './subcommands/addkey'
 import * as removekey from './subcommands/removekey'
@@ -88,6 +88,37 @@ function validateArgs(args: any): void {
     } 
 }
 
+// not sure if we should add this here...
+// function validateKeystoreFile(conf: config.Config): void {
+
+//     if (!fs.existsSync(conf.keystoreFile)) {
+//         console.error(`No keystoreFile exists at location "${conf.keystoreFile}".`)
+//         process.exit(1)
+//     } else {
+//         try {
+//             JSON.parse(fs.readFileSync(conf.keystoreFile).toString('utf8'))
+//         } catch (err) {
+//             console.error(`Error loading keystoreFile file from "${conf.keystoreFile}".`)
+//             console.error(err.message)
+//             process.exit(1)
+//         }
+//     }
+// }
+
+function validateSigningKeyExists(conf: config.Config, ks: Keystore): void {
+        // if there is a signing in the config but it doesn't exist in the keystore
+        if (conf.signingKey != null) {
+            const signing = ks.getKeyPairs(conf.callsign).filter((key: Key) => {
+                return key.public === conf.signingKey 
+            })
+    
+            if (signing.length < 1) {
+                console.error(`Default signing key has no matching private key found in the keystore.`)
+                process.exit(1)
+            }
+        }
+}
+
 async function main() {
 
     const args = parseArgs()
@@ -99,7 +130,7 @@ async function main() {
         if (args.config === config.defaultConfigPath) {
             await interactiveInit()
         } else {
-            console.error(`No config file exists at "${args.config}". Exiting.`)
+            console.error(`No config file exists at "${args.config}".`)
             process.exit(1)
         }
     }
@@ -112,7 +143,15 @@ async function main() {
         console.error(err.message)
         process.exit(1)
     }
+
+    // validate that keystore file exists
+    // validateKeystoreFile(conf)
     const ks: Keystore = new Keystore(conf.keystoreFile)
+
+    // if this subcommand is any of the commands that signs something
+    if (['chat'].includes(args.subcommand)) {
+        validateSigningKeyExists(conf, ks)
+    }
 
     let code = null
     switch (args.subcommand) {

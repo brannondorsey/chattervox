@@ -87,8 +87,9 @@ export function validate(config: Config): void {
     } else if (typeof config.keystoreFile !== 'string') {
         throw TypeError('keystoreFile must be a string type')
     } else if (typeof config.signingKey !== 'undefined' 
+          && config.signingKey != null
           && typeof config.signingKey !== 'string') {
-        throw TypeError('signingKey must be a string if it is defined')
+        throw TypeError('signingKey must be a string or null if it is defined')
     }
 }
 

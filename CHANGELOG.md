@@ -1,5 +1,9 @@
 # Pre-releases
 
+## v0.3.2
+
+- Validate that if `conf.signingkey` exists it has a matching private key before executing `chat` subcommand.
+
 ## v0.3.1
 
 - Add details about the TypeScript implementation of the protocol
