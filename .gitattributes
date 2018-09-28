@@ -1,1 +1,1 @@
-test/** linguist-detectable=false
+test/**/*.js linguist-detectable=false
