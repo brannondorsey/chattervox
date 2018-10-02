@@ -10,6 +10,7 @@ import * as addkey from './subcommands/addkey'
 import * as removekey from './subcommands/removekey'
 import * as showkey from './subcommands/showkey'
 import * as genkey from './subcommands/genkey'
+import * as send from './subcommands/send'
 import { interactiveInit } from './ui/init'
 import { isCallsign } from './utils'
 
@@ -40,6 +41,25 @@ function parseArgs(): any {
     })
 
     chat; // intentionally unused
+
+    const send: ArgumentParser = subs.addParser('send', {
+        addHelp: true,
+        description: 'Send a chattervox packet.'
+    })
+
+    send.addArgument('--to', { 
+        type: 'string', 
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")', 
+        defaultValue: 'CQ',
+        required: false
+    })
+
+    send.addArgument('message', {
+        type: 'string',
+        help: 'A UTF-8 message to be sent.',
+        nargs: '?',
+        required: false
+    })
 
     const showKey: ArgumentParser = subs.addParser('showkey', {
         addHelp: true,
@@ -149,13 +169,14 @@ async function main() {
     const ks: Keystore = new Keystore(conf.keystoreFile)
 
     // if this subcommand is any of the commands that signs something
-    if (['chat'].includes(args.subcommand)) {
+    if (['chat', 'send'].includes(args.subcommand)) {
         validateSigningKeyExists(conf, ks)
     }
 
     let code = null
     switch (args.subcommand) {
         case 'chat': code = await chat.main(args, conf, ks); break
+        case 'send': code = await send.main(args, conf, ks); break
         case 'showkey': code = await showkey.main(args, conf, ks); break
         case 'addkey': code = await addkey.main(args, conf, ks); break
         case 'removekey': code = await removekey.main(args, conf, ks); break
