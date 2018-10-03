@@ -8,6 +8,11 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
 
     const messenger = new Messenger(conf)
 
+    messenger.on('close', () => {
+        console.error(`The connection to KISS TNC at ${conf.kissPort} is now closed. Exiting.`)
+        process.exit(1)
+    })
+
     messenger.on('tnc-error', (err) => {
         console.error(`The connection to KISS TNC ${conf.kissPort} experienced the following error:`)
         console.error(err)
@@ -27,7 +32,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     }
 
     // only sign if the user's config has a signing key
-    const sign: boolean = typeof conf.signingKey === 'string'
+    const sign: boolean = (typeof conf.signingKey === 'string' && args.dontSign !== true)
     if (args.message != null && args.message.length > 0) {
         await messenger.send(args.to.toUpperCase(), args.message, sign)
     } else {

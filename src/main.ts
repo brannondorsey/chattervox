@@ -11,6 +11,7 @@ import * as removekey from './subcommands/removekey'
 import * as showkey from './subcommands/showkey'
 import * as genkey from './subcommands/genkey'
 import * as send from './subcommands/send'
+import * as receive from './subcommands/receive'
 import { interactiveInit } from './ui/init'
 import { isCallsign } from './utils'
 
@@ -44,13 +45,20 @@ function parseArgs(): any {
 
     const send: ArgumentParser = subs.addParser('send', {
         addHelp: true,
-        description: 'Send a chattervox packet.'
+        description: 'Send chattervox packets.'
     })
 
-    send.addArgument('--to', { 
+    send.addArgument(['--to', '-t'], { 
         type: 'string', 
         help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")', 
         defaultValue: 'CQ',
+        required: false
+    })
+
+    send.addArgument(['--dont-sign', '-d'], { 
+        action: 'storeTrue',
+        dest: 'dontSign',
+        help: 'Don\'t sign messages.',
         required: false
     })
 
@@ -59,6 +67,47 @@ function parseArgs(): any {
         help: 'A UTF-8 message to be sent.',
         nargs: '?',
         required: false
+    })
+
+    const receive: ArgumentParser = subs.addParser('receive', {
+        addHelp: true,
+        description: 'Write chattervox packets to stdout.'
+    })
+
+    receive.addArgument(['--allow-unsigned', '-u'], {
+        action: 'storeTrue',
+        dest: 'allowUnsigned',
+        help: 'Receive unsigned messages.',
+    })
+
+    receive.addArgument(['--allow-untrusted', '-e'], {
+        action: 'storeTrue',
+        dest: 'allowUntrusted',
+        help: 'Receive messages signed by senders not in keyring.',
+    })
+
+    receive.addArgument(['--allow-invalid', '-i'], {
+        action: 'storeTrue',
+        dest: 'allowInvalid',
+        help: 'Receive messages with invalid signatures.',
+    })
+
+    receive.addArgument(['--raw', '-r'], {
+        action: 'storeTrue',
+        dest: 'raw',
+        help: 'Print raw ax25 packets instead of parsed chattervox messages.',
+    })
+
+    receive.addArgument('--to', { 
+        type: 'string', 
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").', 
+        defaultValue: 'CQ',
+        required: false
+    })
+
+    receive.addArgument(['--verbose', '-v'], {
+        action: 'storeTrue',
+        help: 'Print verbose output from any chattervox packet received to stderr.',
     })
 
     const showKey: ArgumentParser = subs.addParser('showkey', {
@@ -169,7 +218,7 @@ async function main() {
     const ks: Keystore = new Keystore(conf.keystoreFile)
 
     // if this subcommand is any of the commands that signs something
-    if (['chat', 'send'].includes(args.subcommand)) {
+    if (['chat', 'send', 'receive'].includes(args.subcommand)) {
         validateSigningKeyExists(conf, ks)
     }
 
@@ -177,6 +226,7 @@ async function main() {
     switch (args.subcommand) {
         case 'chat': code = await chat.main(args, conf, ks); break
         case 'send': code = await send.main(args, conf, ks); break
+        case 'receive': code = await receive.main(args, conf, ks); break
         case 'showkey': code = await showkey.main(args, conf, ks); break
         case 'addkey': code = await addkey.main(args, conf, ks); break
         case 'removekey': code = await removekey.main(args, conf, ks); break

@@ -9,7 +9,8 @@ export interface MessageEvent {
     to: Station 
     from: Station 
     message: string
-    verification: Verification
+    verification: Verification,
+    ax25Buffer?: Buffer
 }
 
 export enum Verification {
@@ -115,7 +116,8 @@ export class Messenger extends EventEmitter {
             to: { callsign: packet.to.callsign.trim(), ssid: packet.to.ssid }, 
             from: { callsign: packet.from.callsign.trim(), ssid: packet.from.ssid }, 
             message: packet.message,
-            verification
+            verification,
+            ax25Buffer: data.data
         }
 
         this.emit('message', event)
