@@ -66,6 +66,12 @@ node build/main.js chat
 # open the chat room
 chattervox chat
 
+# send a packet from the command-line
+chattervox send "this is a chattervox packet sent from the command-line."
+
+# receive *all* packets and print them to stdout
+chattervox receive --allow-all
+
 # generate a new public/private key pair, and use it as your default signing key
 chattervox genkey --make-signing
 
@@ -81,19 +87,20 @@ chattervox showkey
 
 ```
 usage: chattervox [-h] [-v] [--config CONFIG]
-                  {chat,showkey,addkey,removekey,genkey} ...
+                  {chat,send,receive,showkey,addkey,removekey,genkey} ...
 
-An AX.25 ham radio chat protocol with support for digital signatures
-and binary compression.
+An AX.25 packet radio chat protocol with support for digital signatures and 
+binary compression. Like IRC over radio waves 📡〰.
 
 Optional arguments:
   -h, --help            Show this help message and exit.
   -v, --version         Show program's version number and exit.
   --config CONFIG, -c CONFIG
-                        Path to config file (default: ~/.chattervox/config.json)
+                        Path to config file (default: /home/braxxox/.
+                        chattervox/config.json)
 
 subcommands:
-  {chat,showkey,addkey,removekey,genkey}
+  {chat,send,receive,showkey,addkey,removekey,genkey}
 ```
 
 ## The Protocol
