@@ -56,9 +56,9 @@ npm run build
 node build/main.js chat
 ```
 
-## Binary Downloads
+### Binary Downloads
 
-[Binary downloads](https://github.com/brannondorsey/chattervox/releases) are packaged via [Pkg](https://github.com/zeit/pkg). Chattervox uses a native Node.js addon for serial port communication but Pkg [does not yet support](https://github.com/zeit/pkg#native-addons) bundling `.node` bindings in their binaries. Therefore, `serialport.node` must live in the same folder as the `chattervox` binaries produced by Pkg. If you want to install chattervox globally on your machine you can maintain this relationship by placing `chattervox` in your PATH using a symlink, or copying both `chattervox` and `serialport.node` to `/usr/local/bin` or wherever your OS looks for programs.
+[Binary downloads](https://github.com/brannondorsey/chattervox/releases) are packaged via [Pkg](https://github.com/zeit/pkg). Chattervox uses a native Node.js addon for serial port communication but Pkg [does not yet support](https://github.com/zeit/pkg#native-addons) bundling `.node` bindings in their binaries. Therefore, the `serialport.node` file that comes with the download must live in the same folder as the `chattervox` binary. If you want to install chattervox globally on your machine you can maintain this relationship by placing `chattervox` in your PATH using a symlink, or copying both `chattervox` and `serialport.node` to `/usr/local/bin` or wherever your OS looks for programs.
 
 ## Usage
 
