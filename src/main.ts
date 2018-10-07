@@ -13,7 +13,7 @@ import * as genkey from './subcommands/genkey'
 import * as send from './subcommands/send'
 import * as receive from './subcommands/receive'
 import { interactiveInit } from './ui/init'
-import { isCallsign } from './utils'
+import { isCallsign, isCallsignSSID } from './utils'
 
 function parseArgs(): any {
 
@@ -150,11 +150,16 @@ function parseArgs(): any {
 function validateArgs(args: any): void {
     if (args.callsign != null && !isCallsign(args.callsign)) {
         console.error(`${args.callsign} is not a valid callsign.`)
-        if (args.callsign.includes('-')) {
+        if (isCallsignSSID(args.callsign)) {
             console.error(`callsign should not include an SSID for key management subcommands.`)
         }
         process.exit(1)
     } 
+
+    if (args.to != null && args.to !== 'CQ' && !(isCallsign(args.to) || isCallsignSSID(args.to))) {
+        console.error('--to must be a callsign, callsign-ssid pair, or chatroom name with less than 7 alphanumeric characters.')
+        process.exit(1)
+    }
 }
 
 // not sure if we should add this here...
