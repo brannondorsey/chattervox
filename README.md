@@ -37,6 +37,8 @@ If you have `npm`, that is the preferred method of install as it allows for the 
 npm install --cli -g chattervox@latest 
 ```
 
+Installing a node package globally may require `sudo`. If you get a permission denied error, try running the install command again with `sudo npm ...`.
+
 ### Source
 
 ```bash
@@ -53,6 +55,10 @@ npm run build
 # run chattervox from source to opening the chat room
 node build/main.js chat
 ```
+
+## Binary Downloads
+
+[Binary downloads](https://github.com/brannondorsey/chattervox/releases) are packaged via [Pkg](https://github.com/zeit/pkg). Chattervox uses a native Node.js addon for serial port communication but Pkg [does not yet support](https://github.com/zeit/pkg#native-addons) bundling `.node` bindings in their binaries. Therefore, `serialport.node` must live in the same folder as the `chattervox` binaries produced by Pkg. If you want to install chattervox globally on your machine you can maintain this relationship by placing `chattervox` in your PATH using a symlink, or copying both `chattervox` and `serialport.node` to `/usr/local/bin` or wherever your OS looks for programs.
 
 ## Usage
 
