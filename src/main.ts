@@ -92,6 +92,18 @@ function parseArgs(): any {
         help: 'Receive messages with invalid signatures.',
     })
 
+    receive.addArgument(['--all-recipients', '-g'], {
+        action: 'storeTrue',
+        dest: 'allRecipients',
+        help: 'Receive messages to all callsigns and chat rooms.',
+    })
+
+    receive.addArgument(['--allow-all', '-a'], {
+        action: 'storeTrue',
+        dest: 'allowAll',
+        help: 'Receive all messages, independent of signatures and destinations.',
+    })
+
     receive.addArgument(['--raw', '-r'], {
         action: 'storeTrue',
         dest: 'raw',

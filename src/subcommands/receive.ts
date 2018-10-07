@@ -1,7 +1,8 @@
 import { Config } from '../config'
 import { Keystore } from '../Keystore'
 import { Messenger, MessageEvent, Verification } from '../Messenger'
-import { stationToCallsignSSID } from '../utils'
+import { stationToCallsignSSID, callsignSSIDToStation } from '../utils'
+import { Station } from '../Packet'
 
 function printVerbose(message: MessageEvent, raw: boolean): void {
     let msg = `[verbose] received a packet with `
@@ -38,10 +39,11 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        if (args.verbose) printVerbose(message, args.raw) 
-        if (message.to.callsign === 'CQ' || 
-           (message.to.callsign === conf.callsign && 
-            message.to.ssid === conf.ssid)) {
+        const to: Station = callsignSSIDToStation(args.to)
+        if (args.verbose) printVerbose(message, args.raw)
+        if (args.allowAll) printPacket(message, args.raw)
+        else if (args.allRecipients ||
+                 (message.to.callsign === to.callsign && message.to.ssid == to.ssid)) {
             if (message.verification === Verification.Valid) {
                 printPacket(message, args.raw)
             } else if (args.allowUnsigned  && message.verification === Verification.NotSigned) {
