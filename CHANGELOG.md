@@ -1,5 +1,12 @@
 # Pre-releases
 
+## v0.4.0
+
+- Add `send` and `receive` subcommands ([#16](https://github.com/brannondorsey/chattervox/issues/16)).
+- `showkey` now indicates if a key is the signing key (e.g. `Public Key (your signing key): 043da...`). This indication is shown on the Public key only, even though the private key is technically the key used for signing.
+- Fix bug where keys wouldn't show up in `showkey` unless both private and public keys were in the store. Now `showkey` shows keys even if only public key is in the store.
+- Update README to explain path relationship between `chattervox` binary and `serialport.node` native addon ([#13](https://github.com/brannondorsey/chattervox/issues/13)).
+
 ## v0.3.2
 
 - Validate that if `conf.signingkey` exists it has a matching private key before executing `chat` subcommand.
