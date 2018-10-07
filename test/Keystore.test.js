@@ -97,7 +97,15 @@ describe('Keystore', function() {
     })
 
     it(`should add a second public key`, () => {
-        ks.addPublicKey('KC3LZO', '0470326b0d79c816ec4b0b2cc44c76973b3361e53b0929127da7d16c9da8be8cf2eb934894cec50a48e22fd39f8ef3892f')
+        ks.addPublicKey('PUBONLY', '0470326b0d79c816ec4b0b2cc44c76973b3361e53b0929127da7d16c9da8be8cf2eb934894cec50a48e22fd39f8ef3892f')
+    })
+
+    it(`the public keys we just added for PUBONLY shouldn't show up in getKeyPairs()`, () => {
+        assert.deepEqual([], ks.getKeyPairs('PUBONLY'))
+    })
+
+    it(`the public keys we just added for PUBONLY should show up in getKeys()`, () => {
+        assert.equal(ks.getKeys('PUBONLY').length, 1)
     })
 
     it(`should error if callsign is undefined`, () => {
@@ -119,7 +127,7 @@ describe('Keystore', function() {
     })
 
     it(`should have three callsigns stored`, () => {
-        assert.deepEqual([ 'N0CALL', 'DEADBEEF', 'KC3LZO' ], ks.getCallsigns())
+        assert.deepEqual([ 'N0CALL', 'DEADBEEF', 'KC3LZO', 'PUBONLY' ], ks.getCallsigns())
     })
 
     it(`should load an existing keystore from disk on construction`, () => {

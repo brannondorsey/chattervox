@@ -101,15 +101,26 @@ export class Keystore {
         return this._keystore[callsign].map(key => key.public)
     }
 
-    /**@method getKeyPairs
+    /**
+     * Get Key objects that have both public and private keys
+     * @method getKeyPairs
      * @param  {string} callsign
-     * @returns {object[]} An array of keypair objects { public: 'hex', private: 'hex' }
+     * @returns {Key[]} An array of keypair objects that have both { public: 'hex', private: 'hex' }
      */
     getKeyPairs(callsign: string): Key[] {
-        if (!this._keystore.hasOwnProperty(callsign)) return []
-        return this._keystore[callsign].filter(key => {
+        return this.getKeys(callsign).filter(key => {
             return typeof key.public === 'string' && typeof key.private === 'string'
         })
+    }
+
+    /** Get Key objects that have at least a public key
+     * @method getKeys
+     * @param  {string} callsign
+     * @returns {Key[]} An array of key objects that have at least a public key
+     */
+    getKeys(callsign: string): Key[] {
+        if (!this._keystore.hasOwnProperty(callsign)) return []
+        return this._keystore[callsign]
     }
 
 
