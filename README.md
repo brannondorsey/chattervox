@@ -109,7 +109,10 @@ The chattervox packet is primitive and straightforward. It contains a simple hea
 
 The protocol may be amended in the future to add new features, however, its simplicity should not be seen as a weakness. The goal of chattervox is singular: **Add cryptographic verifiability to text-based radio communication.**
 
+For proposed changes to the protocol [view the open RFCs](https://github.com/brannondorsey/chattervox/issues?q=is%3Aissue+is%3Aopen+label%3ARFC).
+
 ### Chattervox Protocol v1 Packet 
+
 
 | Byte Offset       | # of Bits     | Name                                | Value              | Description 
 | ----------------- | ------------- | ----------------------------------- | ------------------ | ----------- 
