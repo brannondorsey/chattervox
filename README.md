@@ -8,6 +8,8 @@ Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of
 
 With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md) or the discussion about chattervox on [hackernews](https://news.ycombinator.com/item?id=18058031).
 
+> **UPDATE** (October 11, 2018): We've setup a public key registry at [`chattervox-keys`](https://github.com/brannondorsey/chattervox-keys). Once you've generated your public key you can post it there!
+
 > **UPDATE** (September 24th, 2018): Please understand that this software is in **beta** and I ask for your patience until development stabilizes. While I'm very excited to see that interest in the project is high, It's quite unexpected and I have spent very little time testing the software (aside from automated tests). If you have a problem, [please submit a detailed issue](https://github.com/brannondorsey/chattervox/issues) and I'll have a look. I'll be writing a tutorial explaining how to get up and running with chattervox very soon.
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
