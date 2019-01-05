@@ -10,6 +10,7 @@ import * as addkey from './subcommands/addkey'
 import * as removekey from './subcommands/removekey'
 import * as showkey from './subcommands/showkey'
 import * as genkey from './subcommands/genkey'
+import * as genvanity from './subcommands/genvanity'
 import * as send from './subcommands/send'
 import * as receive from './subcommands/receive'
 import { interactiveInit } from './ui/init'
@@ -156,6 +157,15 @@ function parseArgs(): any {
         help: 'Make the generated key your default signing key.' 
     })
 
+    const genVanity: ArgumentParser = subs.addParser('genvanity', {
+        addHelp: true,
+        description: 'Generate a vanity keypair for your callsign.'
+    })
+    genVanity.addArgument('--needle', { type: 'string', nargs: '?' })
+    genVanity.addArgument('--prefix', { type: 'string', nargs: '?' })
+    genVanity.addArgument('--suffix', { type: 'string', nargs: '?' })
+    genVanity.addArgument('--min', { type: 'int', nargs: '?' })
+
     return parser.parseArgs()
 }
 
@@ -248,6 +258,7 @@ async function main() {
         case 'addkey': code = await addkey.main(args, conf, ks); break
         case 'removekey': code = await removekey.main(args, conf, ks); break
         case 'genkey': code = await genkey.main(args, conf, ks); break
+        case 'genvanity': code = await genvanity.main(args, conf, ks); break
     }
 
     process.exit(code)
