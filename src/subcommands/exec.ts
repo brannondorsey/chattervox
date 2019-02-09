@@ -9,6 +9,7 @@ import { spawn, ChildProcess } from 'child_process'
 export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
 
     let proc: ChildProcess
+    const promises: Promise<any>[] = []
     const messenger = new Messenger(conf)
 
     messenger.on('close', () => {
@@ -22,7 +23,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        timeout(args.delay).then(() => writeToProc(proc, message.message))
+        promises.push(timeout(args.delay).then(() => writeToProc(proc, message.message)))
         // const to: Station = callsignSSIDToStation(args.to)
         // if (args.allowAll) writeToProc(proc, message.message)
         // else if (args.allRecipients ||
@@ -57,19 +58,19 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
         const commandArgs: Array<string> = args.command.split(' ')
         const command = commandArgs.shift()
 
-        proc = spawn(command, commandArgs)
+        proc = spawn(command, commandArgs, { detached: true })
 
         proc.stdout.on('data', (data) => {
             const text: string = data.toString('utf8')
             console.log(text)
-            messenger.send(args.to.toUpperCase(), text, true)
+            promises.push(messenger.send(args.to.toUpperCase(), text, true))
         })
 
         if (args.stderr) {
             proc.stderr.on('data', (data) => {
                 const text: string = data.toString('utf8')
                 console.error(text)
-                messenger.send(args.to.toUpperCase(), text, true)
+                promises.push(messenger.send(args.to.toUpperCase(), text, true))
             })
         }
 
@@ -96,6 +97,8 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
         })
 
     })
+
+    await Promise.all(promises)
 
     return 0
 }
