@@ -12,6 +12,7 @@ import * as showkey from './subcommands/showkey'
 import * as genkey from './subcommands/genkey'
 import * as send from './subcommands/send'
 import * as receive from './subcommands/receive'
+import * as exec from './subcommands/exec'
 import { interactiveInit } from './ui/init'
 import { isCallsign, isCallsignSSID } from './utils'
 
@@ -156,6 +157,44 @@ function parseArgs(): any {
         help: 'Make the generated key your default signing key.' 
     })
 
+    const exec: ArgumentParser = subs.addParser('exec', {
+        addHelp: true,
+        description: 'Execute a command using chattervox as the standard interface'
+    })
+
+    exec.addArgument(['--delay', '-s'], {
+        type: 'int',
+        help: 'Milliseconds before transmitting stdout after receiving stdin (default: 5000)',
+        defaultValue: 5000,
+        required: false
+    })
+
+    exec.addArgument(['--to', '-t'], {
+        type: 'string',
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")',
+        defaultValue: 'CQ',
+        required: false
+    })
+
+    exec.addArgument(['--dont-sign', '-d'], {
+        action: 'storeTrue',
+        dest: 'dontSign',
+        help: 'Don\'t sign messages.',
+        required: false
+    })
+
+    exec.addArgument(['--stderr', '-e'], {
+        action: 'storeTrue',
+        help: 'Also transmit stderr.',
+        defaultValue: false,
+        required: false
+    })
+
+    exec.addArgument('command', {
+        type: 'string',
+        help: 'A command to be run'
+    })
+
     return parser.parseArgs()
 }
 
@@ -248,6 +287,7 @@ async function main() {
         case 'addkey': code = await addkey.main(args, conf, ks); break
         case 'removekey': code = await removekey.main(args, conf, ks); break
         case 'genkey': code = await genkey.main(args, conf, ks); break
+        case 'exec': code = await exec.main(args, conf, ks); break
     }
 
     process.exit(code)
