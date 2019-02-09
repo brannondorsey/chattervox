@@ -13,6 +13,7 @@ import * as genkey from './subcommands/genkey'
 import * as send from './subcommands/send'
 import * as receive from './subcommands/receive'
 import * as exec from './subcommands/exec'
+import * as tty from './subcommands/tty'
 import { interactiveInit } from './ui/init'
 import { isCallsign, isCallsignSSID } from './utils'
 
@@ -195,6 +196,25 @@ function parseArgs(): any {
         help: 'A command to be run'
     })
 
+    const tty: ArgumentParser = subs.addParser('tty', {
+        addHelp: true,
+        description: 'A dumb tty interface. Sends what\'s typed, prints what\'s received.' 
+    })
+
+    tty.addArgument(['--to', '-t'], {
+        type: 'string',
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")',
+        defaultValue: 'CQ',
+        required: false
+    })
+
+    tty.addArgument(['--dont-sign', '-d'], {
+        action: 'storeTrue',
+        dest: 'dontSign',
+        help: 'Don\'t sign messages.',
+        required: false
+    })
+
     return parser.parseArgs()
 }
 
@@ -288,6 +308,7 @@ async function main() {
         case 'removekey': code = await removekey.main(args, conf, ks); break
         case 'genkey': code = await genkey.main(args, conf, ks); break
         case 'exec': code = await exec.main(args, conf, ks); break
+        case 'tty': code = await tty.main(args, conf, ks); break
     }
 
     process.exit(code)
