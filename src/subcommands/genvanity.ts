@@ -25,9 +25,14 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     let requirements = []
 
     needle = needle || prefix || suffix
-    let key: Key = genKeyWith(needle)
+    if (!/^[0-9a-fA-F]+$/.test(needle)){
+        console.error(`Cannot generate a vanity key using a needle with non-hexidecimal characters.`)
+        process.exit(1)
+    } else {
+        console.log(`Generating vanity key for ${conf.callsign} with needle "${needle}"`)
+    }
 
-    console.log(`Generating vanity key for ${conf.callsign} with needle ${needle}`)
+    let key: Key = genKeyWith(needle)
 
     if (prefix) requirements.push( (key: Key) => key.public.slice(2, 2 + prefix.length) === prefix )
     if (suffix) requirements.push( (key: Key) => key.public.endsWith(suffix) )
