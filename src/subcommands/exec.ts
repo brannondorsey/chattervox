@@ -6,9 +6,10 @@ import { isCallsign, isCallsignSSID, callsignSSIDToStation, timeout } from '../u
 import * as readline from 'readline'
 import { spawn, ChildProcess } from 'child_process'
 
+let proc: ChildProcess
+
 export async function main(args: any, conf: Config, ks: Keystore): Promise<number> {
 
-    let proc: ChildProcess
     const promises: Promise<any>[] = []
     const messenger = new Messenger(conf)
 
@@ -58,7 +59,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
         const commandArgs: Array<string> = args.command.split(' ')
         const command = commandArgs.shift()
 
-        proc = spawn(command, commandArgs, { detached: true })
+        proc = spawn(command, commandArgs)
 
         proc.stdout.on('data', (data) => {
             const text: string = data.toString('utf8')
@@ -85,6 +86,8 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
             reject(err)
         })
 
+        // throw Error('test')
+
         const rl: readline.ReadLine = readline.createInterface({
             input: process.stdin,
             terminal: false,
@@ -101,6 +104,12 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     await Promise.all(promises)
 
     return 0
+}
+
+export function cleanup(): void {
+    if (proc) {
+        proc.kill()
+    }
 }
 
 function writeToProc(proc: ChildProcess, text: string): void {

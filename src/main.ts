@@ -264,7 +264,14 @@ function validateSigningKeyExists(conf: config.Config, ks: Keystore): void {
         }
 }
 
+function cleanup(): void {
+    exec.cleanup()
+}
+
 async function main() {
+
+    process.on('SIGINT', cleanup) // catch ctrl-c
+    process.on('SIGTERM', cleanup) // catch kill
 
     const args = parseArgs()
     validateArgs(args)
@@ -317,5 +324,6 @@ async function main() {
 main()
 .catch((err) => {
     console.error(err)
+    cleanup()
     process.exit(1)
 })
