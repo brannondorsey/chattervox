@@ -24,21 +24,26 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        promises.push(timeout(args.delay).then(() => writeToProc(proc, message.message)))
-        // const to: Station = callsignSSIDToStation(args.to)
-        // if (args.allowAll) writeToProc(proc, message.message)
-        // else if (args.allRecipients ||
-        //          (message.to.callsign === to.callsign && message.to.ssid == to.ssid)) {
-        //     if (message.verification === Verification.Valid) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowUnsigned  && message.verification === Verification.NotSigned) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowUntrusted && message.verification === Verification.KeyNotFound) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowInvalid   && message.verification === Verification.Invalid) {
-        //         writeToProc(proc, message.message)
-        //     }
-        // }
+        let receive = false
+        const to: Station = callsignSSIDToStation(args.to)
+        if (args.allowAll) receive = true
+        else if (args.allRecipients ||
+                 (message.to.callsign === to.callsign && message.to.ssid == to.ssid)) {
+            if (message.verification === Verification.Valid) {
+                receive = true
+            } else if (args.allowUnsigned  && message.verification === Verification.NotSigned) {
+                receive = true
+            } else if (args.allowUntrusted && message.verification === Verification.KeyNotFound) {
+                receive = true
+            } else if (args.allowInvalid   && message.verification === Verification.Invalid) {
+                receive = true
+            }
+        }
+
+        if (receive) {
+            promises.push(timeout(args.delay).then(() => writeToProc(proc, message.message)))
+        }
+
     })
 
     try {
@@ -85,8 +90,6 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
             }
             reject(err)
         })
-
-        // throw Error('test')
 
         const rl: readline.ReadLine = readline.createInterface({
             input: process.stdin,

@@ -20,21 +20,20 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        console.log(message.message)
-        // const to: Station = callsignSSIDToStation(args.to)
-        // if (args.allowAll) writeToProc(proc, message.message)
-        // else if (args.allRecipients ||
-        //          (message.to.callsign === to.callsign && message.to.ssid == to.ssid)) {
-        //     if (message.verification === Verification.Valid) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowUnsigned  && message.verification === Verification.NotSigned) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowUntrusted && message.verification === Verification.KeyNotFound) {
-        //         writeToProc(proc, message.message)
-        //     } else if (args.allowInvalid   && message.verification === Verification.Invalid) {
-        //         writeToProc(proc, message.message)
-        //     }
-        // }
+        const to: Station = callsignSSIDToStation(args.to)
+        if (args.allowAll) console.log(message.message)
+        else if (args.allRecipients ||
+                 (message.to.callsign === to.callsign && message.to.ssid == to.ssid)) {
+            if (message.verification === Verification.Valid) {
+                console.log(message.message)
+            } else if (args.allowUnsigned  && message.verification === Verification.NotSigned) {
+                console.log(message.message)
+            } else if (args.allowUntrusted && message.verification === Verification.KeyNotFound) {
+                console.log(message.message)
+            } else if (args.allowInvalid   && message.verification === Verification.Invalid) {
+                console.log(message.message)
+            }
+        }
     })
 
     try {

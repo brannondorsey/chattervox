@@ -52,7 +52,7 @@ function parseArgs(): any {
 
     send.addArgument(['--to', '-t'], { 
         type: 'string', 
-        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")', 
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").',
         defaultValue: 'CQ',
         required: false
     })
@@ -133,7 +133,7 @@ function parseArgs(): any {
 
     const addKey: ArgumentParser = subs.addParser('addkey', { 
         addHelp: true, 
-        description: 'Add a new public key to the keystore associated with a callsign.' 
+        description: 'Add a new public key to the keystore associated with a callsign.'
     })
 
     addKey.addArgument('callsign', { type: 'string' })
@@ -160,19 +160,19 @@ function parseArgs(): any {
 
     const exec: ArgumentParser = subs.addParser('exec', {
         addHelp: true,
-        description: 'Execute a command using chattervox as the standard interface'
+        description: 'Execute a command using chattervox as the stdin and stdout interface.'
     })
 
     exec.addArgument(['--delay', '-s'], {
         type: 'int',
-        help: 'Milliseconds before transmitting stdout after receiving stdin (default: 5000)',
-        defaultValue: 5000,
+        help: 'Milliseconds after receiving stdin to wait before transmitting stdout (default: 3000).',
+        defaultValue: 3000,
         required: false
     })
 
     exec.addArgument(['--to', '-t'], {
         type: 'string',
-        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")',
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").',
         defaultValue: 'CQ',
         required: false
     })
@@ -184,11 +184,41 @@ function parseArgs(): any {
         required: false
     })
 
-    exec.addArgument(['--stderr', '-e'], {
+    exec.addArgument(['--stderr', '-f'], {
         action: 'storeTrue',
         help: 'Also transmit stderr.',
         defaultValue: false,
         required: false
+    })
+
+    exec.addArgument(['--allow-unsigned', '-u'], {
+        action: 'storeTrue',
+        dest: 'allowUnsigned',
+        help: 'Receive unsigned messages.',
+    })
+
+    exec.addArgument(['--allow-untrusted', '-e'], {
+        action: 'storeTrue',
+        dest: 'allowUntrusted',
+        help: 'Receive messages signed by senders not in keyring.',
+    })
+
+    exec.addArgument(['--allow-invalid', '-i'], {
+        action: 'storeTrue',
+        dest: 'allowInvalid',
+        help: 'Receive messages with invalid signatures.',
+    })
+
+    exec.addArgument(['--all-recipients', '-g'], {
+        action: 'storeTrue',
+        dest: 'allRecipients',
+        help: 'Receive messages to all callsigns and chat rooms.',
+    })
+
+    exec.addArgument(['--allow-all', '-a'], {
+        action: 'storeTrue',
+        dest: 'allowAll',
+        help: 'Receive all messages, independent of signatures and destinations.',
     })
 
     exec.addArgument('command', {
@@ -198,12 +228,12 @@ function parseArgs(): any {
 
     const tty: ArgumentParser = subs.addParser('tty', {
         addHelp: true,
-        description: 'A dumb tty interface. Sends what\'s typed, prints what\'s received.' 
+        description: 'A dumb tty interface. Sends what\'s typed, prints what\'s received.'
     })
 
     tty.addArgument(['--to', '-t'], {
         type: 'string',
-        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name. (default: "CQ")',
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").',
         defaultValue: 'CQ',
         required: false
     })
@@ -214,6 +244,37 @@ function parseArgs(): any {
         help: 'Don\'t sign messages.',
         required: false
     })
+
+    tty.addArgument(['--allow-unsigned', '-u'], {
+        action: 'storeTrue',
+        dest: 'allowUnsigned',
+        help: 'Receive unsigned messages.',
+    })
+
+    tty.addArgument(['--allow-untrusted', '-e'], {
+        action: 'storeTrue',
+        dest: 'allowUntrusted',
+        help: 'Receive messages signed by senders not in keyring.',
+    })
+
+    tty.addArgument(['--allow-invalid', '-i'], {
+        action: 'storeTrue',
+        dest: 'allowInvalid',
+        help: 'Receive messages with invalid signatures.',
+    })
+
+    tty.addArgument(['--all-recipients', '-g'], {
+        action: 'storeTrue',
+        dest: 'allRecipients',
+        help: 'Receive messages to all callsigns and chat rooms.',
+    })
+
+    tty.addArgument(['--allow-all', '-a'], {
+        action: 'storeTrue',
+        dest: 'allowAll',
+        help: 'Receive all messages, independent of signatures and destinations.',
+    })
+
 
     return parser.parseArgs()
 }
@@ -268,10 +329,15 @@ function cleanup(): void {
     exec.cleanup()
 }
 
+function onSignal(): void {
+    cleanup()
+    process.exit(0)
+}
+
 async function main() {
 
-    process.on('SIGINT', cleanup) // catch ctrl-c
-    process.on('SIGTERM', cleanup) // catch kill
+    process.on('SIGINT', onSignal) // catch ctrl-c
+    process.on('SIGTERM', onSignal) // catch kill
 
     const args = parseArgs()
     validateArgs(args)
