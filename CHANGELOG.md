@@ -1,5 +1,9 @@
 # Pre-releases
 
+## v0.5.0
+
+- Add `exec` and `tty` subcommands.
+
 ## v0.4.0
 
 - Add `send` and `receive` subcommands ([#16](https://github.com/brannondorsey/chattervox/issues/16)).
