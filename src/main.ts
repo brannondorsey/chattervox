@@ -325,13 +325,17 @@ function validateSigningKeyExists(conf: config.Config, ks: Keystore): void {
         }
 }
 
-function cleanup(): void {
-    exec.cleanup()
+async function cleanup(): Promise<void> {
+    return await exec.cleanup()
 }
 
 function onSignal(): void {
     cleanup()
-    process.exit(0)
+    .then(() => process.exit(0))
+    .catch(err => {
+        console.error(err)
+        process.exit(1)
+    })
 }
 
 async function main() {
@@ -388,8 +392,8 @@ async function main() {
 }
 
 main()
-.catch((err) => {
+.catch(async (err) => {
     console.error(err)
-    cleanup()
+    await cleanup()
     process.exit(1)
 })

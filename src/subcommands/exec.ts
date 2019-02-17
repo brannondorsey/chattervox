@@ -109,10 +109,35 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     return 0
 }
 
-export function cleanup(): void {
-    if (proc) {
-        proc.kill()
-    }
+// If we have spawned a child process send it a SIGTERM signal.
+// If it doesn't die send it a SIGKILL in 7 seconds.
+// Reject the promise if it still isn't dead 3 seconds after that.
+export function cleanup(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if (proc) {
+            proc.on('close', resolve)
+            proc.on('exit', resolve)
+            proc.on('error', reject)
+
+            proc.kill('SIGTERM')
+            // note that these timeouts can still run even after resolve and
+            // reject, so be careful what's put in here.
+            setTimeout(() => {
+                if (proc.pid) {
+                    proc.kill('SIGKILL')
+                    let message = 'Sent SIGKILL signal after child process didn\'t'
+                    message += ' exit from SIGTERM. There may be a zombie process'
+                    message += ' left over as a result.'
+                    console.error(message)
+                }
+            }, 7000)
+
+            // give up and reject the promise
+            setTimeout(reject, 10000)
+        } else {
+            resolve()
+        }
+    })
 }
 
 function writeToProc(proc: ChildProcess, text: string): void {
