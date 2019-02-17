@@ -1,5 +1,5 @@
 import { Station } from './Packet'
-import * as crypto from 'crypto'
+import { createHash } from 'crypto'
 
 export function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
@@ -9,7 +9,7 @@ export function timeout(millis: number): Promise<void> {
 
 // MD5 is weak as hell. Don't use this for anything cryptographic.
 export function md5(buffer: string | Buffer): string {
-    return crypto.createHash('md5').update(buffer).digest('hex')
+    return createHash('md5').update(buffer).digest('hex')
 }
 
 export function stationToCallsignSSID(station: Station): string {
