@@ -11,6 +11,7 @@ export interface Config {
     keystoreFile: string,
     kissPort: string,
     kissBaud: number,
+    feedbackDebounce: number,
     signingKey?: string,
 }
 
@@ -19,12 +20,13 @@ export const defaultConfigPath = path.join(defaultChattervoxDir, 'config.json')
 export const defaultKeystorePath = path.join(defaultChattervoxDir, 'keystore.json')
 
 export const defaultConfig: Config = {
-    version: 2,
+    version: 3,
     callsign: 'N0CALL',
     ssid: 0,
     keystoreFile: defaultKeystorePath,
     kissPort: '/tmp/kisstnc',
     kissBaud: 9600,
+    feedbackDebounce: 20 * 1000,
 }
 
 /** Save a config file as JSON
@@ -47,8 +49,25 @@ export function save(config: Config, configPath?: string): void {
 export function load(configPath?: string): Config {
     const path = typeof configPath === 'string' ? configPath : defaultConfigPath
     const conf: Config = JSON.parse(fs.readFileSync(path).toString('utf8'))
+    if (migrate(conf)) save(conf, configPath)
     validate(conf)
     return conf
+}
+
+/**
+ * Update an older config to a newer one. Transforms the config object in place.
+ * @function migrate
+ * @param {Config} config
+ * @returns boolean True if the config was changed
+ */
+export function migrate(config: Config): boolean {
+    let changed = false
+    // this change was made in config v3
+    if (typeof config.feedbackDebounce === 'undefined') {
+        config.feedbackDebounce = defaultConfig.feedbackDebounce
+        changed = true
+    }
+    return changed
 }
 
 /** Check if the config file (or any file) exists
@@ -87,9 +106,12 @@ export function validate(config: Config): void {
     } else if (typeof config.keystoreFile !== 'string') {
         throw TypeError('keystoreFile must be a string type')
     } else if (typeof config.signingKey !== 'undefined' 
-          && config.signingKey != null
+          && config.signingKey !== null
           && typeof config.signingKey !== 'string') {
         throw TypeError('signingKey must be a string or null if it is defined')
+    } else if (config.feedbackDebounce !== null
+               && typeof config.feedbackDebounce !== 'number') {
+        throw TypeError('feedbackDebounce must be a number or null')
     }
 }
 

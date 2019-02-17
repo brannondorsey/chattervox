@@ -3,7 +3,8 @@ import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
 import { Packet, Station } from './Packet.js'
 import { Config } from './config.js'
-import { callsignSSIDToStation } from './utils.js'
+import { callsignSSIDToStation, timeout } from './utils.js'
+import { md5 } from './utils.js'
 
 export interface MessageEvent {
     to: Station 
@@ -25,6 +26,7 @@ export class Messenger extends EventEmitter {
     private ks: Keystore
     private tnc: any
     private config: Config
+    private recentlySent = new Map<string, number>()
 
     constructor(config: Config) {
         super()
@@ -83,6 +85,9 @@ export class Messenger extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.tnc.send_data(packet, (err: Error) => {
                 if (err) reject(err)
+                if (this.config.feedbackDebounce) {
+                    this._addToRecentlySent(packet, this.config.feedbackDebounce)
+                }
                 resolve()
             })
         })
@@ -90,7 +95,7 @@ export class Messenger extends EventEmitter {
 
     private async _onAX25DataRecieved(data: any) {
 
-        let packet
+        let packet: Packet
         try  {
             packet = await Packet.FromAX25Packet(data.data)
         } catch (err) {
@@ -98,6 +103,11 @@ export class Messenger extends EventEmitter {
                 // console.log('Received invalid packet, skipping')
                 return
             } else throw err
+        }
+
+        if (this.config.feedbackDebounce && this._wasRecentlySent(data.data)) {
+            // console.error('[verbose] received recently sent message, aborting received event.')
+            return
         }
 
         let verification = Verification.NotSigned
@@ -129,5 +139,29 @@ export class Messenger extends EventEmitter {
         tnc.on('error', (error: any) => this.emit('tnc-error', error))
         tnc.on('data', (data: any) => this._onAX25DataRecieved(data))
         return tnc
+    }
+
+    private _addToRecentlySent(buffer: Buffer, expiresIn: number): void {
+        // MD5 is weak, but it doesn't matter here because we aren't using it
+        // for anything sensitive. Here we like speed ;)
+        const fingerprint = md5(buffer)
+        if (!this.recentlySent.has(fingerprint)) {
+            this.recentlySent.set(fingerprint, 1)
+        } else {
+            let count = this.recentlySent.get(fingerprint)
+            this.recentlySent.set(fingerprint, count + 1)
+        }
+        timeout(expiresIn).then(() => {
+            const count = this.recentlySent.get(fingerprint)
+            if (count == 1) this.recentlySent.delete(fingerprint)
+            else this.recentlySent.set(fingerprint, count - 1)
+        })
+    }
+
+    private _wasRecentlySent(buffer: Buffer): boolean {
+        // MD5 is weak, but it doesn't matter here because we aren't using it
+        // for anything sensitive. Here we like speed ;)
+        const fingerprint = md5(buffer)
+        return this.recentlySent.has(fingerprint)
     }
 }

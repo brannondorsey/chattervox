@@ -6,6 +6,17 @@ describe('config', () => {
 
     const tmpConfig = 'tmp-config.json'
     let conf = {
+        version: 3,
+        callsign: 'N0CALL',
+        ssid: 0,
+        keystoreFile: './tmp-keystore.json',
+        kissPort: '/tmp/kisstnc',
+        kissBaud: 9600,
+        feedbackDebounce: 20 * 1000,
+    }
+
+    const tmpConfigV2 = 'tmp-config-v2.json'
+    let confV2 = {
         version: 2,
         callsign: 'N0CALL',
         ssid: 0,
@@ -16,11 +27,13 @@ describe('config', () => {
 
     before(() => {
         fs.writeFileSync(conf.keystoreFile, '{}')
+        fs.writeFileSync(tmpConfigV2, JSON.stringify(confV2))
     })
 
     after(() => {
         fs.unlinkSync(conf.keystoreFile)
         fs.unlinkSync(tmpConfig)
+        fs.unlinkSync(tmpConfigV2)
     })
 
     describe('save', () => {
@@ -64,6 +77,25 @@ describe('config', () => {
             fs.writeFileSync(path, JSON.stringify(c))
             assert.throws(() => config.load(path), TypeError)
             fs.unlinkSync(path)
+        })
+    })
+
+    describe('migrate', () => {
+
+        it ('should migrate a v2 config file', () => {
+            assert.equal(confV2.feedbackDebounce, undefined)
+            const changed = config.migrate(confV2)
+            assert.equal(changed, true)
+            assert.equal(confV2.feedbackDebounce, config.defaultConfig.feedbackDebounce)
+        })
+
+        it ('should load a config v2 file', () => {
+            config.load(tmpConfigV2)
+        })
+
+        it ('should save a migrated v2 -> v3 config file on load()', () => {
+            const migratedConf = JSON.parse(fs.readFileSync(tmpConfigV2).toString('utf8'))
+            assert.equal(migratedConf.feedbackDebounce, config.defaultConfig.feedbackDebounce)
         })
     })
 
@@ -112,6 +144,12 @@ describe('config', () => {
         it ('should error if keystoreFile doesn\'t exist', () => {
             const c = copy(conf)
             delete c.keystoreFile
+            assert.throws(() => config.validate(c), TypeError)
+        })
+
+        it ('should error if feedbackDebounce doesn\'t exist', () => {
+            const c = copy(conf)
+            delete c.feedbackDebounce
             assert.throws(() => config.validate(c), TypeError)
         })
 
@@ -170,6 +208,13 @@ describe('config', () => {
             const c = copy(conf)
             c.signingKey = 5
             assert.throws(() => config.validate(c), TypeError)
+        })
+
+        it ('should error if feedbackDebounce isn\'t null or a number', () => {
+            const c = copy(conf)
+            c.feedbackDebounce = '4000'
+            assert.throws(() => config.validate(c), TypeError)
+
         })
     })
 })
