@@ -1,5 +1,10 @@
 # Pre-releases
 
+## v0.6.0
+
+- Add feedback debounce feature and config item to filter out received messages if they are exact copies of messages recently sent. The Direwolf TNC can frequently "hear" a message right after its transmitted depending on the hardware setup. This feature protects against this annoying behavior and is now enabled by default.
+- Improved cleanup process during shutdown, especially when using the `exec` subcommand.
+
 ## v0.5.0
 
 - Add `exec` and `tty` subcommands.
