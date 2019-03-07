@@ -93,7 +93,7 @@ export class Messenger extends EventEmitter {
         })
     }
 
-    private async _onAX25DataRecieved(data: any) {
+    private async _onAX25DataRecieved(data: any): Promise<undefined> {
 
         let packet: Packet
         try  {

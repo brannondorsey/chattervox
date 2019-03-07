@@ -163,20 +163,29 @@ export class Packet {
     }
 
     static async FromAX25Packet(ax25Buffer: Buffer): Promise<Packet> {
-        
+
         const ax25Packet = new AX25.Packet()        
         try {
             ax25Packet.disassemble(ax25Buffer)
         } catch (err) {
-            const error = TypeError(err.message)
-            error.name = 'InvalidPacket'
-            throw error
+            throwInvalidPacketError(err)
         }
 
         const packet = new Packet()
         packet.from = ax25Packet.source
         packet.to = ax25Packet.destination
-        await packet.disassemble(ax25Packet.payload)
+        try {
+            await packet.disassemble(ax25Packet.payload)
+        } catch (err) {
+            throwInvalidPacketError(err)
+        }
+
         return packet
     }
+}
+
+function throwInvalidPacketError(err: Error): TypeError {
+    const error = TypeError(err.message)
+    error.name = 'InvalidPacket'
+    throw error
 }
