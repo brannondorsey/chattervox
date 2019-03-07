@@ -40,7 +40,7 @@ export class Messenger extends EventEmitter {
         this.tnc = this._createTNC(config.kissPort, config.kissBaud)
     }
 
-    openTNC(): Promise<undefined> {
+    openTNC(): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.tnc == null) {
                 this.tnc = this._createTNC(this.config.kissPort, this.config.kissBaud)
@@ -93,7 +93,7 @@ export class Messenger extends EventEmitter {
         })
     }
 
-    private async _onAX25DataRecieved(data: any): Promise<undefined> {
+    private async _onAX25DataRecieved(data: any): Promise<void> {
 
         let packet: Packet
         try  {
