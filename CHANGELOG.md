@@ -1,5 +1,10 @@
 # Pre-releases
 
+## v0.6.1
+
+- Fix unhandled exception when receiving non-chattervox AX.25 packets ([#24](https://github.com/brannondorsey/chattervox/issues/24))
+- Update README to include instructions for installing Direwolf on Linux and MacOS. Shout out to @danc256 for some additions to the MacOS instructions.
+
 ## v0.6.0
 
 - Add feedback debounce feature and config item to filter out received messages if they are exact copies of messages recently sent. The Direwolf TNC can frequently "hear" a message right after its transmitted depending on the hardware setup. This feature protects against this annoying behavior and is now enabled by default.
