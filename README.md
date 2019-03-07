@@ -8,11 +8,11 @@ Chattervox implements a minimal [packet radio protocol](#the-protocol) on top of
 
 With amateur packet radio anyone can pretend to be anyone else. With Chattervox, you can be sure you're chatting with the person you intend to. For more information, check out the [FAQ](FAQ.md) or the discussion about chattervox on [hackernews](https://news.ycombinator.com/item?id=18058031).
 
+> **UPDATE** (March 6, 2019): Check out [my slides](https://brannon.online/wopr.pdf) from the Chattervox workshop at WOPR Summit.
+
 > **UPDATE** (February 25, 2019): I've created a collection of example applications and use cases for the Chattervox protocol [here](https://github.com/brannondorsey/chattervox-examples). One example uses Chattervox to access a remote BASH shell on another machine and another shows how you can play Zork I over packet radio. PRs welcome!
 
 > **UPDATE** (October 11, 2018): We've setup a public key registry at [`chattervox-keys`](https://github.com/brannondorsey/chattervox-keys). Once you've generated your public key you can post it there!
-
-> **UPDATE** (September 24th, 2018): Please understand that this software is in **beta** and I ask for your patience until development stabilizes. While I'm very excited to see that interest in the project is high, It's quite unexpected and I have spent very little time testing the software (aside from automated tests). If you have a problem, [please submit a detailed issue](https://github.com/brannondorsey/chattervox/issues) and I'll have a look. I'll be writing a tutorial explaining how to get up and running with chattervox very soon.
 
 ![Baofeng UV-5R Linux setup](.images/baofeng.jpg)
 
@@ -29,13 +29,36 @@ You can also make the cable yourself if you prefer. Check out [this zine](https:
 
 Finally, to operate legally on amateur radio frequencies, you'll need an amateur radio license.
 
+### Install Direwolf
+
+#### Linux
+
+Installing Direwolf on a Linux machine is easy! Just clone the repo, build the software, and install it on your system.
+
+```bash
+# clone, build, and install the Direwolf TNC
+git clone https://github.com/wb2osz/direwolf
+cd direwolf
+make
+sudo make install
+make install-conf
+```
+
+#### MacOS
+
+If you are using MacOS, you can install Direwolf with Homebrew by following the instructions in [this Gist](https://gist.github.com/danc256/9eca3317e5eaea7fb7e642e5f3a1f3f0) (thanks for the edits [@danc256](https://github.com/danc256/)).
+
+#### Windows
+
+Windows isn't currently supported, but will be soon!
+
 ## Download
 
 Binary downloads are available for Linux x64 and x86 architectures on the [releases page](https://github.com/brannondorsey/chattervox/releases).
 
 If you have `npm`, that is the preferred method of install as it allows for the easiest upgrade to the latest version. If you prefer to "build" it from Typescript source and run it as a Node.js app, you can do that as well.
 
-### NPM 
+### NPM
 
 ```bash
 npm install --cli -g chattervox@latest 
@@ -134,3 +157,9 @@ For proposed changes to the protocol [view the open RFCs](https://github.com/bra
 ### TypeScript chattervox client
 
 This repository serves as the first implementation of the protocol. The `chattervox` command-line tool acts as a client to send and receive chattervox packets in combination with a TNC. This implementation creates a new ECDSA keypair the first time it's run and includes a digital signature for each message (so long as there remains a `signingKey` in `~/.chattervox/config.json`). Each message is temporarily compressed by the client before it's sent in an attempt to measure the efficiency of the DEFLATE compression algorithm. If the compressed version is smaller than the uncompressed version, the compressed buffer is used as the message payload and the compression bit is set in the chattervox packet. If the plaintext version is smaller, no compression is used and the original message text is used as the payload.
+
+## Beta Software
+
+Please understand that this software is in **beta** and I ask for your patience until development stabilizes. While I'm very excited to see that interest in the project is high, It's quite unexpected and I have spent very little time testing the software (aside from automated tests). If you have a problem, [please submit a detailed issue](https://github.com/brannondorsey/chattervox/issues) and I'll have a look. I'll be writing a tutorial explaining how to get up and running with chattervox very soon.
+
+The protocol is subject to change, and there are several [RFCs](https://github.com/brannondorsey/chattervox/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3ARFC+) that indicate the direction it may take in the near future. Currently, there is no protection from replay attacks, so that's something we hope to fix soon!
