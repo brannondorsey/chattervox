@@ -1,9 +1,14 @@
 #!/bin/bash
 OS="$(uname -s)"
 
-rm -rf ./pkg 
+rm -rf ./pkg
 
-if [ "$(expr substr $OS 1 5)" == "Linux" ]; then
+if [ ! -f "build/main.js" ] ; then
+    echo "No build to package. Run 'npm run build' first."
+    exit 1
+fi
+
+if [ "$OS" == "Linux" ]; then
     echo "Building for Linux..."
 
     # linux x64

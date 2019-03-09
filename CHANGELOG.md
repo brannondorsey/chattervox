@@ -1,5 +1,10 @@
 # Pre-releases
 
+## Pending Release
+
+- Add MacOS packaging support via `npm run pkg` (`pkg.sh`)
+- Fix tsc type complaint for `Promise<undefined>`, replaced with `Promise<void>`.
+
 ## v0.6.1
 
 - Fix unhandled exception when receiving non-chattervox AX.25 packets ([#24](https://github.com/brannondorsey/chattervox/issues/24))
