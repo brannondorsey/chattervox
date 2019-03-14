@@ -19,8 +19,8 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     })
 
     messenger.on('message', (message: MessageEvent) => {
-        if (message.to.callsign === 'CQ' || 
-           (message.to.callsign === conf.callsign && 
+        if (message.to.callsign === 'CQ' ||
+           (message.to.callsign === conf.callsign &&
             message.to.ssid === conf.ssid)) {
                 ui.printReceivedMessage(message, conf.callsign)
         }
@@ -35,7 +35,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
     }
 
     ui.enter()
-    
+
     // only sign if the user's config has a signing key
     const sign: boolean = typeof conf.signingKey === 'string'
     const callsignSSID: string = stationToCallsignSSID({ callsign: conf.callsign, ssid: conf.ssid })

@@ -21,14 +21,14 @@ function parseArgs(): any {
 
     const pkgBuff = fs.readFileSync(path.resolve(__dirname, '..', 'package.json'))
     const pkgJSON: any = JSON.parse(pkgBuff.toString('utf8'))
-    
+
     const parser = new ArgumentParser({
         prog: pkgJSON.name,
         version: pkgJSON.version,
         description: pkgJSON.description
     })
 
-    parser.addArgument(['--config', '-c'], { 
+    parser.addArgument(['--config', '-c'], {
         help: `Path to config file (default: ${config.defaultConfigPath})`,
         defaultValue: config.defaultConfigPath
     })
@@ -50,14 +50,14 @@ function parseArgs(): any {
         description: 'Send chattervox packets.'
     })
 
-    send.addArgument(['--to', '-t'], { 
-        type: 'string', 
+    send.addArgument(['--to', '-t'], {
+        type: 'string',
         help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").',
         defaultValue: 'CQ',
         required: false
     })
 
-    send.addArgument(['--dont-sign', '-d'], { 
+    send.addArgument(['--dont-sign', '-d'], {
         action: 'storeTrue',
         dest: 'dontSign',
         help: 'Don\'t sign messages.',
@@ -112,9 +112,9 @@ function parseArgs(): any {
         help: 'Print raw ax25 packets instead of parsed chattervox messages.',
     })
 
-    receive.addArgument('--to', { 
-        type: 'string', 
-        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").', 
+    receive.addArgument('--to', {
+        type: 'string',
+        help: 'The recipient\'s callsign, callsign-ssid pair, or chatroom name (default: "CQ").',
         defaultValue: 'CQ',
         required: false
     })
@@ -131,15 +131,15 @@ function parseArgs(): any {
 
     showKey.addArgument('callsign', { type: 'string', nargs: '?' })
 
-    const addKey: ArgumentParser = subs.addParser('addkey', { 
-        addHelp: true, 
+    const addKey: ArgumentParser = subs.addParser('addkey', {
+        addHelp: true,
         description: 'Add a new public key to the keystore associated with a callsign.'
     })
 
     addKey.addArgument('callsign', { type: 'string' })
     addKey.addArgument('publickey', { type: 'string' })
 
-    const removeKey: ArgumentParser = subs.addParser('removekey', { 
+    const removeKey: ArgumentParser = subs.addParser('removekey', {
         addHelp: true,
         description: 'Remove a public key from the keystore.'
     })
@@ -152,10 +152,10 @@ function parseArgs(): any {
         description: 'Generate a new keypair for your callsign.'
     })
 
-    genKey.addArgument('--make-signing', { 
+    genKey.addArgument('--make-signing', {
         action: 'storeTrue',
         dest: 'makeSigning',
-        help: 'Make the generated key your default signing key.' 
+        help: 'Make the generated key your default signing key.'
     })
 
     const exec: ArgumentParser = subs.addParser('exec', {
@@ -286,7 +286,7 @@ function validateArgs(args: any): void {
             console.error(`callsign should not include an SSID for key management subcommands.`)
         }
         process.exit(1)
-    } 
+    }
 
     if (args.to != null && args.to !== 'CQ' && !(isCallsign(args.to) || isCallsignSSID(args.to))) {
         console.error('--to must be a callsign, callsign-ssid pair, or chatroom name with less than 7 alphanumeric characters.')
@@ -315,9 +315,9 @@ function validateSigningKeyExists(conf: config.Config, ks: Keystore): void {
         // if there is a signing in the config but it doesn't exist in the keystore
         if (conf.signingKey != null) {
             const signing = ks.getKeyPairs(conf.callsign).filter((key: Key) => {
-                return key.public === conf.signingKey 
+                return key.public === conf.signingKey
             })
-    
+
             if (signing.length < 1) {
                 console.error(`Default signing key has no matching private key found in the keystore.`)
                 process.exit(1)

@@ -13,7 +13,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
 }
 
 function printKeys(callsign: string, keystore: Keystore, conf: Config): void {
-    
+
     const keys: Key[] = keystore.getKeys(callsign)
     keys.forEach((key) => {
         if (key.public) {

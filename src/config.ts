@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
 import { isCallsignSSID, isCallsign, isSSID } from './utils'
-import { Keystore } from './Keystore' 
+import { Keystore } from './Keystore'
 
 export interface Config {
     readonly version: number,
@@ -82,11 +82,11 @@ export function exists(configPath?: string): boolean {
 
 /**
  * @function validate
- * @param config 
+ * @param config
  * @throws TypeError
  */
 export function validate(config: Config): void {
-    
+
     if (typeof config !== 'object') {
         throw TypeError('config is not an object')
     } else if (typeof config.version !== 'number') {
@@ -105,7 +105,7 @@ export function validate(config: Config): void {
         throw TypeError('kissBaud must be a number type')
     } else if (typeof config.keystoreFile !== 'string') {
         throw TypeError('keystoreFile must be a string type')
-    } else if (typeof config.signingKey !== 'undefined' 
+    } else if (typeof config.signingKey !== 'undefined'
           && config.signingKey !== null
           && typeof config.signingKey !== 'string') {
         throw TypeError('signingKey must be a string or null if it is defined')

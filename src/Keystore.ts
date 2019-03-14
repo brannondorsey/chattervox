@@ -49,7 +49,7 @@ export class Keystore {
     // only used for you
     /**
      * @param  {string} callsign
-     * @returns {object} keypair object 
+     * @returns {object} keypair object
      */
     genKeyPair(callsign: string): Key {
         const key = ec.genKeyPair()

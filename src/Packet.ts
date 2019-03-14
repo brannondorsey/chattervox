@@ -31,7 +31,7 @@ export class Packet {
     data: Buffer
 
     constructor() {
-        
+
         this.header = {
             version: 0x01,
             compressed: null,
@@ -56,11 +56,11 @@ export class Packet {
     }
 
     async assemble(): Promise<Buffer> {
-        
+
         if (Buffer.isBuffer(this.signature)) {
             this.header.signed = true
             this.header.signatureLength = this.signature.length
-        } 
+        }
 
         // compress signature + message
         let payload: Buffer = this.header.signed ? this.signature : Buffer.from([])
@@ -78,7 +78,7 @@ export class Packet {
         let flags = 0x00
         if (this.header.signed) flags = flags | HeaderFlags.Signed
         if (this.header.compressed) flags = flags | HeaderFlags.Compressed
-        
+
         // header buffer
         const headerArray = [...MagicBytes, this.header.version, flags]
         if (this.signature !== null) {
@@ -137,11 +137,11 @@ export class Packet {
 
     }
 
-    static async ToAX25Packet(from: string | Station, 
-                              to: string | Station, 
-                              utf8Text: string, 
+    static async ToAX25Packet(from: string | Station,
+                              to: string | Station,
+                              utf8Text: string,
                               signature?: Buffer): Promise<any> {
-        
+
         if (typeof from === 'string') from = callsignSSIDToStation(from)
         if (typeof to === 'string') to = callsignSSIDToStation(to)
 
@@ -149,7 +149,7 @@ export class Packet {
         packet.from = from
         packet.to = to
         packet.message = utf8Text
-        
+
         if (signature) {
             if (Buffer.isBuffer(signature)) packet.signature = signature
             else throw TypeError(`signature must be a Buffer type, not ${typeof signature}`)
@@ -164,7 +164,7 @@ export class Packet {
 
     static async FromAX25Packet(ax25Buffer: Buffer): Promise<Packet> {
 
-        const ax25Packet = new AX25.Packet()        
+        const ax25Packet = new AX25.Packet()
         try {
             ax25Packet.disassemble(ax25Buffer)
         } catch (err) {

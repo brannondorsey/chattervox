@@ -60,7 +60,7 @@ export async function main(args: any, conf: Config, ks: Keystore): Promise<numbe
 
         const promises: Promise<any>[] = []
         rl.on('line', (line) => {
-            promises.push(messenger.send(args.to.toUpperCase(), line, sign))  
+            promises.push(messenger.send(args.to.toUpperCase(), line, sign))
         })
 
         rl.on('close', () => {

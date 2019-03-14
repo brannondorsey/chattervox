@@ -14,7 +14,7 @@ const colorMap: { [callsign: string]: TerminalFunction } = {}
 const myColorFunction: TerminalFunction = term.cyan
 
 function getColorFunction(callsign: string): TerminalFunction {
-    
+
     const choices = [
         term.red,
         term.green,
@@ -92,7 +92,7 @@ async function prompt(callsign: string): Promise<string> {
 }
 
 function printStyledText(message: MessageEvent): void {
-    
+
 
     //// For testing only...
     // const rand = Math.random()
@@ -102,9 +102,9 @@ function printStyledText(message: MessageEvent): void {
     // else message.verification = Verification.KeyNotFound
 
     const from: string = stationToCallsignSSID(message.from)
-    getColorFunction(from)(`${from}`)    
+    getColorFunction(from)(`${from}`)
     switch (message.verification) {
-        
+
         case Verification.NotSigned:
             term(' (UNSIGNED): ').dim(`${message.message}`)
             break;
@@ -112,7 +112,7 @@ function printStyledText(message: MessageEvent): void {
         case Verification.Valid:
             term(`: ${message.message}`)
             break;
-        
+
         case Verification.Invalid:
             term(' (INVALID SIGNATURE): ').strike(`${message.message}`)
             break;

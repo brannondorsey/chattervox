@@ -3,12 +3,11 @@ import { EventEmitter } from 'events'
 import { Keystore } from './Keystore.js'
 import { Packet, Station } from './Packet.js'
 import { Config } from './config.js'
-import { callsignSSIDToStation, timeout } from './utils.js'
-import { md5 } from './utils.js'
+import { callsignSSIDToStation, timeout, md5 } from './utils.js'
 
 export interface MessageEvent {
-    to: Station 
-    from: Station 
+    to: Station
+    from: Station
     message: string
     verification: Verification,
     ax25Buffer?: Buffer
@@ -63,7 +62,7 @@ export class Messenger extends EventEmitter {
     async send(to: string | Station, message: string, sign: boolean) {
         if (typeof to === 'string') to = callsignSSIDToStation(to)
         const from: Station = { callsign: this.config.callsign, ssid: this.config.ssid }
-    
+
         let signature: Buffer = null
         if (sign) {
             if (this.config.signingKey) {
@@ -123,8 +122,8 @@ export class Messenger extends EventEmitter {
         }
 
         const event: MessageEvent = {
-            to: { callsign: packet.to.callsign.trim(), ssid: packet.to.ssid }, 
-            from: { callsign: packet.from.callsign.trim(), ssid: packet.from.ssid }, 
+            to: { callsign: packet.to.callsign.trim(), ssid: packet.to.ssid },
+            from: { callsign: packet.from.callsign.trim(), ssid: packet.from.ssid },
             message: packet.message,
             verification,
             ax25Buffer: data.data
