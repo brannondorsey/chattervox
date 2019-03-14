@@ -62,3 +62,7 @@ export function isSSID(ssid: number) {
         throw TypeError('ssid must be a number type')
     return ssid >= 0 && ssid <= 15
 }
+
+export function isBrokenPipeError(err: { code: string }): boolean {
+    return err.code == 'EPIPE' || err.code == 'EIO'
+}

@@ -38,7 +38,7 @@
     "ax25": "git+https://github.com/echicken/node-ax25.git#124b496631fa448d95ac97553cdd1c8120d4f9cb",
     "command-exists": "^1.2.7",
     "elliptic": "^6.4.1",
-    "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git",
+    "kiss-tnc": "git+https://github.com/brannondorsey/kiss-tnc.git#3320a26e7d5abd586ca558dccfb4cbfcd291768b",
     "terminal-kit": "^1.26.2"
   },
   "devDependencies": {

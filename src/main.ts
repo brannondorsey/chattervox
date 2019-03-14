@@ -15,7 +15,7 @@ import * as receive from './subcommands/receive'
 import * as exec from './subcommands/exec'
 import * as tty from './subcommands/tty'
 import { interactiveInit } from './ui/init'
-import { isCallsign, isCallsignSSID } from './utils'
+import { isCallsign, isCallsignSSID, isBrokenPipeError } from './utils'
 
 function parseArgs(): any {
 
@@ -376,16 +376,24 @@ async function main() {
     }
 
     let code = null
-    switch (args.subcommand) {
-        case 'chat': code = await chat.main(args, conf, ks); break
-        case 'send': code = await send.main(args, conf, ks); break
-        case 'receive': code = await receive.main(args, conf, ks); break
-        case 'showkey': code = await showkey.main(args, conf, ks); break
-        case 'addkey': code = await addkey.main(args, conf, ks); break
-        case 'removekey': code = await removekey.main(args, conf, ks); break
-        case 'genkey': code = await genkey.main(args, conf, ks); break
-        case 'exec': code = await exec.main(args, conf, ks); break
-        case 'tty': code = await tty.main(args, conf, ks); break
+
+    try {
+        switch (args.subcommand) {
+            case 'chat': code = await chat.main(args, conf, ks); break
+            case 'send': code = await send.main(args, conf, ks); break
+            case 'receive': code = await receive.main(args, conf, ks); break
+            case 'showkey': code = await showkey.main(args, conf, ks); break
+            case 'addkey': code = await addkey.main(args, conf, ks); break
+            case 'removekey': code = await removekey.main(args, conf, ks); break
+            case 'genkey': code = await genkey.main(args, conf, ks); break
+            case 'exec': code = await exec.main(args, conf, ks); break
+            case 'tty': code = await tty.main(args, conf, ks); break
+        }
+    } catch (err) {
+        if (isBrokenPipeError(err)) {
+            console.error(`\nThe connection to KISS TNC ${conf.kissPort} has been closed with a broken pipe.`)
+            code = 1
+        } else throw err
     }
 
     process.exit(code)

@@ -45,7 +45,7 @@ async function askUser(): Promise<Config> {
     let callsign: string = await promptCallsign()
     let ssid: number = await promptSSID()
 
-    term(`\nDo you have a dedicated hardware TNC that you would like to use instead of direwolf (default: no)? `)
+    term(`\nDo you have a dedicated hardware TNC that you would like to use instead of Direwolf (default: no)? `)
     let hasDedicatedTNC: string = (await term.inputField().promise).trim().toLowerCase()
     let dedicatedTNC: boolean = (hasDedicatedTNC === 'yes' || hasDedicatedTNC === 'y')
 
@@ -58,6 +58,13 @@ async function askUser(): Promise<Config> {
         term(`\nWhat is the baud rate for this serial device (default ${defaultConfig.kissBaud})? `)
         const baud = (await term.inputField().promise).trim()
         kissBaud = baud === '' ? defaultConfig.kissBaud : parseInt(baud)
+    } else {
+        term(`\nWould you like to connect to Direwolf over TCP instead of a pseudo-serial connection (default: no)? `)
+        let prefersTCPRaw: string = (await term.inputField().promise).trim().toLowerCase()
+        let prefersTCP: boolean = (prefersTCPRaw === 'yes' || prefersTCPRaw === 'y')
+        if (prefersTCP) {
+            kissPort = 'kiss://localhost:8001'
+        }
     }
 
     const conf: Config = JSON.parse(JSON.stringify(defaultConfig))
