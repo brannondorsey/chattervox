@@ -1,6 +1,6 @@
 # Pre-releases
 
-## Pending Release
+## v0.7.0
 
 - Add KISS support over TCP ([#7](https://github.com/brannondorsey/chattervox/issues/7)).
 - Make TCP default KISS connection type. The default `config.kissPort` value is now `kiss://localhost:8001` instead of `/tmp/kisstnc`.
