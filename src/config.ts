@@ -24,7 +24,7 @@ export const defaultConfig: Config = {
     callsign: 'N0CALL',
     ssid: 0,
     keystoreFile: defaultKeystorePath,
-    kissPort: '/tmp/kisstnc',
+    kissPort: 'kiss://localhost:8001',
     kissBaud: 9600,
     feedbackDebounce: 20 * 1000,
 }

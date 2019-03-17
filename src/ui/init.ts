@@ -59,11 +59,11 @@ async function askUser(): Promise<Config> {
         const baud = (await term.inputField().promise).trim()
         kissBaud = baud === '' ? defaultConfig.kissBaud : parseInt(baud)
     } else {
-        term(`\nWould you like to connect to Direwolf over TCP instead of a pseudo-serial connection (default: no)? `)
-        let prefersTCPRaw: string = (await term.inputField().promise).trim().toLowerCase()
-        let prefersTCP: boolean = (prefersTCPRaw === 'yes' || prefersTCPRaw === 'y')
-        if (prefersTCP) {
-            kissPort = 'kiss://localhost:8001'
+        term(`\nWould you like to connect to Direwolf over serial instead of the default TCP connection (default: no)? `)
+        let prefersSerialRaw: string = (await term.inputField().promise).trim().toLowerCase()
+        let prefersSerial: boolean = (prefersSerialRaw === 'yes' || prefersSerialRaw === 'y')
+        if (prefersSerial) {
+            kissPort = '/tmp/kisstnc'
         }
     }
 

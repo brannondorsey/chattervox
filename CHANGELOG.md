@@ -2,7 +2,9 @@
 
 ## Pending Release
 
-- Add MacOS packaging support via `npm run pkg` (`pkg.sh`)
+- Add KISS support over TCP ([#7](https://github.com/brannondorsey/chattervox/issues/7)).
+- Make TCP default KISS connection type. The default `config.kissPort` value is now `kiss://localhost:8001` instead of `/tmp/kisstnc`.
+- Add MacOS packaging support via `npm run pkg` (`pkg.sh`).
 - Fix tsc type complaint for `Promise<undefined>`, replaced with `Promise<void>`.
 
 ## v0.6.1

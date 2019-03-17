@@ -18,7 +18,7 @@ With amateur packet radio anyone can pretend to be anyone else. With Chattervox,
 
 ## Prerequisites
 
-Chattervox requires a linux computer and a serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC which can be run on the same computer hosting the `chattervox` application.
+Chattervox requires a linux computer and a network or serial connection to a TNC to send and receive AX.25 packets. I recommend using [Direwolf](https://github.com/wb2osz/direwolf), a popular software TNC which can be run on the same computer hosting the `chattervox` application.
 
 You'll also need a radio and a cable to connect the microphone and speaker from the radio to your linux machine. I recommend the following equipment, especially if you're on a budget:
 
